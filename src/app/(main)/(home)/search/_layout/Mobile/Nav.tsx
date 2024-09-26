@@ -42,7 +42,7 @@ const Nav = memo(() => {
           .map((item: any) => ({
             key: item.key,
             label: (
-              <div onClick={() => router.push('/discover/search', { query: { type: item.key } })}>
+              <div onClick={() => router.push('/search', { query: { type: item.key } })}>
                 {item.label}
               </div>
             ),

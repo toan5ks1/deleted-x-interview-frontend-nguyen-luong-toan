@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { AssistantCategory } from '@/types/discover';
+import { ProductCategory } from '@/types/discover';
 
 import { ICON_SIZE } from '../../../components/CategoryMenu';
 
@@ -28,58 +28,58 @@ export const useCategory = (fontsize?: number) => {
   return [
     {
       icon: <Icon color={theme.colorTextSecondary} icon={LayoutPanelTop} size={size} />,
-      key: AssistantCategory.All,
+      key: ProductCategory.All,
       label: t('category.assistant.all'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={MicroscopeIcon} size={size} />,
-      key: AssistantCategory.Academic,
+      key: ProductCategory.Academic,
       label: t('category.assistant.academic'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={BriefcaseIcon} size={size} />,
-      key: AssistantCategory.Career,
+      key: ProductCategory.Career,
       label: t('category.assistant.career'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={PencilIcon} size={size} />,
-      key: AssistantCategory.CopyWriting,
+      key: ProductCategory.CopyWriting,
       label: t('category.assistant.copywriting'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={ImageIcon} size={size} />,
-      key: AssistantCategory.Design,
+      key: ProductCategory.Design,
       label: t('category.assistant.design'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={GraduationCapIcon} size={size} />,
-      key: AssistantCategory.Education,
+      key: ProductCategory.Education,
       label: t('category.assistant.education'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={LaughIcon} size={size} />,
-      key: AssistantCategory.Emotions,
+      key: ProductCategory.Emotions,
       label: t('category.assistant.emotions'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={DramaIcon} size={size} />,
-      key: AssistantCategory.Entertainment,
+      key: ProductCategory.Entertainment,
       label: t('category.assistant.entertainment'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={GamepadIcon} size={size} />,
-      key: AssistantCategory.Games,
+      key: ProductCategory.Games,
       label: t('category.assistant.games'),
     },
     {
       icon: <Icon color={theme.colorTextSecondary} icon={Layers} size={size} />,
-      key: AssistantCategory.General,
+      key: ProductCategory.General,
       label: t('category.assistant.general'),
     },
   ];
 };
 
-export const useCategoryItem = (key?: AssistantCategory, fontsize?: number) => {
+export const useCategoryItem = (key?: ProductCategory, fontsize?: number) => {
   const items = useCategory(fontsize);
   if (!key) return;
   return items.find((item) => item.key === key);

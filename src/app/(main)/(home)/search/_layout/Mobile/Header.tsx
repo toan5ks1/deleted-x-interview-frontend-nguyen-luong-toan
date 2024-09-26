@@ -17,7 +17,7 @@ const Header = memo(() => {
   return (
     <MobileNavBar
       contentStyles={{ center: { display: 'none' }, left: { flex: 'none' } }}
-      onBackClick={() => router.push(urlJoin('/discover', type as string))}
+      onBackClick={() => router.push(urlJoin('/', type as string))}
       right={<StoreSearchBar autoFocus={false} mobile style={{ width: '100%' }} />}
       showBackButton
       style={{

@@ -17,9 +17,9 @@ export const useNav = () => {
 
   const activeKey = useMemo(() => {
     for (const value of Object.values(DiscoverTab)) {
-      if (pathname === '/discover/search') {
-        return (type as DiscoverTab) || DiscoverTab.Assistants;
-      } else if (pathname.includes(urlJoin('/discover', value))) {
+      if (pathname === '/search') {
+        return (type as DiscoverTab) || DiscoverTab.Products;
+      } else if (pathname.includes(urlJoin('/', value))) {
         return value;
       }
     }
@@ -35,7 +35,7 @@ export const useNav = () => {
       },
       {
         icon: <Icon icon={Bot} size={iconSize} />,
-        key: DiscoverTab.Assistants,
+        key: DiscoverTab.Products,
         label: t('tab.assistants'),
       },
       {

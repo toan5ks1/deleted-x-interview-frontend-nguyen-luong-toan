@@ -8,7 +8,7 @@ import { SITEMAP_BASE_URL } from '@/const/url';
 import { Locales, locales as allLocales } from '@/locales/resources';
 import { DiscoverService } from '@/server/services/discover';
 import { getCanonicalUrl } from '@/server/utils/url';
-import { AssistantCategory } from '@/types/discover';
+import { ProductCategory } from '@/types/discover';
 import { isDev } from '@/utils/env';
 
 export interface SitemapItem {
@@ -22,14 +22,14 @@ export interface SitemapItem {
 }
 
 export enum SitemapType {
-  Assistants = 'assistants',
   Pages = 'pages',
+  Products = 'Products',
 }
 
 export const LAST_MODIFIED = new Date().toISOString();
 
 export class Sitemap {
-  sitemapIndexs = [{ id: SitemapType.Pages }, { id: SitemapType.Assistants }];
+  sitemapIndexs = [{ id: SitemapType.Pages }, { id: SitemapType.Products }];
 
   private discoverService = new DiscoverService();
 
@@ -146,9 +146,9 @@ export class Sitemap {
   }
 
   async getAssistants(): Promise<MetadataRoute.Sitemap> {
-    const list = await this.discoverService.getAssistantList(DEFAULT_LANG);
+    const list = await this.discoverService.getProductList({});
     const sitmap = list.map((item) =>
-      this._genSitemap(urlJoin('/discover/assistant', item.identifier), {
+      this._genSitemap(urlJoin('/product', item.identifier), {
         lastModified: item?.createdAt || LAST_MODIFIED,
       }),
     );
@@ -156,7 +156,7 @@ export class Sitemap {
   }
 
   async getPage(): Promise<MetadataRoute.Sitemap> {
-    const assistantsCategory = Object.values(AssistantCategory);
+    const assistantsCategory = Object.values(ProductCategory);
 
     return [
       ...this._genSitemap('/', { noLocales: true }),
@@ -165,10 +165,10 @@ export class Sitemap {
       /* ↓ cloud slot ↓ */
 
       /* ↑ cloud slot ↑ */
-      ...this._genSitemap('/discover', { changeFrequency: 'daily', priority: 0.7 }),
-      ...this._genSitemap('/discover/assistants', { changeFrequency: 'daily', priority: 0.7 }),
+      ...this._genSitemap('/', { changeFrequency: 'daily', priority: 0.7 }),
+      ...this._genSitemap('/products', { changeFrequency: 'daily', priority: 0.7 }),
       ...assistantsCategory.flatMap((slug) =>
-        this._genSitemap(`/discover/assistants/${slug}`, {
+        this._genSitemap(`/products/${slug}`, {
           changeFrequency: 'daily',
           priority: 0.7,
         }),

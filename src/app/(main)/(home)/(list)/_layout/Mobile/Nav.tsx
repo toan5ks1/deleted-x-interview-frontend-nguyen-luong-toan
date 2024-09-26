@@ -77,9 +77,9 @@ const Nav = memo(() => {
           items={items}
           onClick={({ key }) => {
             if (key === DiscoverTab.Home) {
-              router.push('/discover');
+              router.push('/');
             } else {
-              router.push(urlJoin('/discover', key));
+              router.push(urlJoin('/', key));
             }
           }}
           selectable

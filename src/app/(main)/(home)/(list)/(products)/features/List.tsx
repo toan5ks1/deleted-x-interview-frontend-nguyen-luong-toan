@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import { DiscoverAssistantItem } from '@/types/discover';
+import { DiscoverProductItem } from '@/types/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
 import Title from '../../../components/Title';
@@ -15,7 +15,7 @@ import Card from './Card';
 
 export interface ListProps {
   category?: string;
-  items?: DiscoverAssistantItem[];
+  items?: DiscoverProductItem[];
   searchKeywords?: string;
 }
 
@@ -31,7 +31,7 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
           data={items}
           initialItemCount={24}
           itemContent={(_, item) => (
-            <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+            <Link href={urlJoin('/product/', item.identifier)} key={item.identifier}>
               <Card showCategory variant={'compact'} {...item} />
             </Link>
           )}
@@ -52,7 +52,7 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
           data={items}
           initialItemCount={12}
           itemContent={(_, item) => (
-            <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+            <Link href={urlJoin('/product/', item.identifier)} key={item.identifier}>
               <Card showCategory={!category} variant={'compact'} {...item} />
             </Link>
           )}

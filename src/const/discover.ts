@@ -1,15 +1,10 @@
-import {
-  DiscoverAssistantItem,
-  DiscoverModelItem,
-  DiscoverPlugintem,
-  DiscoverProviderItem,
-} from '@/types/discover';
+import { DiscoverModelItem, DiscoverProductItem, DiscoverProviderItem } from '@/types/discover';
 
 export const CNY_TO_USD = 7.14;
 
 const DEFAULT_CREATED_AT = new Date().toISOString();
 
-export const DEFAULT_DISCOVER_ASSISTANT_ITEM: Partial<DiscoverAssistantItem> = {
+export const DEFAULT_DISCOVER_ASSISTANT_ITEM: Partial<DiscoverProductItem> = {
   author: '',
   createdAt: DEFAULT_CREATED_AT,
   homepage: '',
@@ -18,22 +13,6 @@ export const DEFAULT_DISCOVER_ASSISTANT_ITEM: Partial<DiscoverAssistantItem> = {
   socialData: {
     conversations: 0,
     likes: 0,
-    users: 0,
-  },
-};
-
-export const DEFAULT_DISCOVER_PLUGIN_ITEM: Partial<DiscoverPlugintem> = {
-  author: '',
-  createdAt: DEFAULT_CREATED_AT,
-  homepage: '',
-  identifier: '',
-  schemaVersion: 1,
-  socialData: {
-    called: 0,
-    executionTime: 0,
-    likes: 0,
-    relatedAssistants: 0,
-    successRate: 1,
     users: 0,
   },
 };

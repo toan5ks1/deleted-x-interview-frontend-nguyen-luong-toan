@@ -9,10 +9,7 @@ import CategoryContainer from '../components/CategoryContainer';
 
 export default memo(() => {
   const pathname = usePathname();
-  const withoutCategory =
-    pathname === '/discover' ||
-    pathname === '/discover/providers' ||
-    pathname === '/discover/search';
+  const withoutCategory = pathname === '/' || pathname === '/search';
 
   if (withoutCategory)
     return (

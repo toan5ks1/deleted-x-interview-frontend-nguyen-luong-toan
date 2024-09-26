@@ -10,11 +10,11 @@ import { LayoutProps } from './type';
 
 const MOBILE_NAV_ROUTES = new Set([
   '/chat',
-  '/discover',
-  '/discover/assistants',
-  '/discover/plugins',
-  '/discover/models',
-  '/discover/providers',
+  '/',
+  '/products',
+  '/plugins',
+  '/models',
+  '/providers',
   '/me',
 ]);
 

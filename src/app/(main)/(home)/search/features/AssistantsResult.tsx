@@ -5,7 +5,6 @@ import List from '../../(list)/(products)/features/List';
 import Back from './Back';
 
 const AssistantsResult = async ({
-  locale,
   q,
   mobile,
 }: {
@@ -14,11 +13,11 @@ const AssistantsResult = async ({
   q: string;
 }) => {
   const discoverService = new DiscoverService();
-  const items = await discoverService.searchAssistant(locale, q);
+  const items = await discoverService.searchProduct(q);
 
   return (
     <>
-      {!mobile && <Back href={'/discover/assistants'} style={{ marginBottom: 0 }} />}
+      {!mobile && <Back href={'/products'} style={{ marginBottom: 0 }} />}
       <List items={items} searchKeywords={q} />
     </>
   );

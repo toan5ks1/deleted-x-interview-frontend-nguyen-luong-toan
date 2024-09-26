@@ -12,7 +12,7 @@ const Sitemap = async ({ id }: { id: SitemapType }): Promise<MetadataRoute.Sitem
     case SitemapType.Pages: {
       return sitemapModule.getPage();
     }
-    case SitemapType.Assistants: {
+    case SitemapType.Products: {
       return sitemapModule.getAssistants();
     }
   }

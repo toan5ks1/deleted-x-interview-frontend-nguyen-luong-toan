@@ -25,14 +25,14 @@ const Category = memo(() => {
             <Link
               href={qs.stringifyUrl({
                 query: { type: item.key },
-                url: '/discover/search',
+                url: '/search',
               })}
             >
               {item.label}
             </Link>
           ),
         }))}
-      onSelect={({ key }) => router.push('/discover/search', { query: { type: key } })}
+      onSelect={({ key }) => router.push('/search', { query: { type: key } })}
       selectedKeys={[activeKey]}
     />
   );

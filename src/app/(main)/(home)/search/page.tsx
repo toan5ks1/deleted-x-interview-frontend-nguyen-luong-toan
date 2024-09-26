@@ -31,7 +31,7 @@ export const generateMetadata = async ({ searchParams }: Props) => {
     description: t('discover.description'),
     locale,
     title: t('discover.search'),
-    url: '/discover/search',
+    url: '/search',
   });
 };
 
@@ -46,10 +46,10 @@ const Page = async ({ searchParams }: Props) => {
   const ld = ldModule.generate({
     description: t('discover.description'),
     title: t('discover.search'),
-    url: '/discover/search',
+    url: '/search',
     webpage: {
       enable: true,
-      search: '/discover/search',
+      search: '/search',
     },
   });
 

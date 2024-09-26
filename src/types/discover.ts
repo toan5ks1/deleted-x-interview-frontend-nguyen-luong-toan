@@ -5,7 +5,7 @@ import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import { MetaData } from '@/types/meta';
 import { LobeAgentSettings } from '@/types/session';
 
-export enum AssistantCategory {
+export enum ProductCategory {
   Academic = 'academic',
   All = 'all',
   Career = 'career',
@@ -36,10 +36,10 @@ export enum PluginCategory {
 }
 
 export enum DiscoverTab {
-  Assistants = 'assistants',
   Home = 'home',
   Models = 'models',
   Plugins = 'plugins',
+  Products = 'products',
   Providers = 'providers',
 }
 
@@ -51,14 +51,14 @@ export interface ExampleTopic {
 }
 
 // TODO 服务端接口待补充
-export interface DiscoverAssistantItem extends LobeAgentSettings {
+export interface DiscoverProductItem extends LobeAgentSettings {
   author: string;
   createdAt: string;
   examples?: ExampleTopic[];
   homepage: string;
   identifier: string;
   meta: MetaData & {
-    category?: AssistantCategory;
+    category?: ProductCategory;
   };
   schemaVersion: 1;
   socialData: {
@@ -66,7 +66,7 @@ export interface DiscoverAssistantItem extends LobeAgentSettings {
     likes: number;
     users: number;
   };
-  suggestions: Omit<DiscoverAssistantItem, 'suggestions' | 'socialData' | 'config'>[];
+  suggestions: Omit<DiscoverProductItem, 'suggestions' | 'socialData' | 'config'>[];
 }
 
 export interface DiscoverModelItem {
@@ -111,7 +111,7 @@ export type DiscoverPlugintem = LobeChatPluginMeta & {
     called: number;
     executionTime: number;
     likes: number;
-    relatedAssistants: number;
+    relatedProducts: number;
     successRate: number;
     users: number;
   };

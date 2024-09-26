@@ -22,24 +22,28 @@ export const generateMetadata = async ({ searchParams }: Props) => {
     description: t('discover.assistants.description'),
     locale,
     title: t('discover.assistants.title'),
-    url: '/discover/assistants',
+    url: '/',
   });
 };
 
 const Page = async ({ searchParams }: Props) => {
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
   const discoverService = new DiscoverService();
-  const items = await discoverService.getAssistantList(locale);
+  const items = await discoverService.getProductList({});
+
+  // const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetProducts();
+
+  console.log(items);
 
   const ld = ldModule.generate({
     description: t('discover.assistants.description'),
     title: t('discover.assistants.title'),
-    url: '/discover/assistants',
+    url: '/',
     webpage: {
       enable: true,
-      search: '/discover/search',
+      search: '/search',
     },
   });
 

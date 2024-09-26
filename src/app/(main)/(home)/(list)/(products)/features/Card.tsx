@@ -8,7 +8,7 @@ import { memo } from 'react';
 import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { DiscoverAssistantItem } from '@/types/discover';
+import { DiscoverProductItem } from '@/types/discover';
 
 import CardBanner from '../../../components/CardBanner';
 import GitHubAvatar from '../../../components/GitHubAvatar';
@@ -62,7 +62,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 }));
 
 export interface AssistantCardProps
-  extends Omit<DiscoverAssistantItem, 'suggestions' | 'socialData' | 'config'>,
+  extends Omit<DiscoverProductItem, 'suggestions' | 'socialData' | 'config'>,
     Omit<FlexboxProps, 'children'> {
   showCategory?: boolean;
   variant?: 'default' | 'compact';
@@ -145,7 +145,7 @@ const AssistantCard = memo<AssistantCardProps>(
           </Paragraph>
           <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
             {showCategory && categoryItem ? (
-              <Link href={urlJoin('/discover/assistants', categoryItem.key)}>
+              <Link href={urlJoin('/products', categoryItem.key)}>
                 <Tag icon={categoryItem.icon} style={{ margin: 0 }}>
                   {categoryItem.label}
                 </Tag>
@@ -157,7 +157,7 @@ const AssistantCard = memo<AssistantCardProps>(
                 .map((tag: string, index) => {
                   const url = qs.stringifyUrl({
                     query: { q: tag, type: 'assistants' },
-                    url: '/discover/search',
+                    url: '/search',
                   });
                   return (
                     <Link href={url} key={index}>

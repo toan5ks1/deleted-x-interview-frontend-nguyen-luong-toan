@@ -58,14 +58,14 @@ const Nav = memo(() => {
     }
   });
 
-  const isHome = pathname === '/discover';
-  const isProviders = pathname === '/discover/providers';
+  const isHome = pathname === '/';
+  const isProviders = pathname === '/providers';
 
   const navBar = items
     .map((item: any) => {
       const isActive = item.key === activeKey;
 
-      const href = item.key === DiscoverTab.Home ? '/discover' : urlJoin('/discover', item.key);
+      const href = item.key === DiscoverTab.Home ? '/' : urlJoin('/', item.key);
 
       return (
         <Link

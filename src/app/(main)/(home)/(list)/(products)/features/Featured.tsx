@@ -7,12 +7,12 @@ import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { DiscoverAssistantItem } from '@/types/discover';
+import { DiscoverProductItem } from '@/types/discover';
 
 import Card from './Card';
 
 interface FeaturedProps {
-  items?: DiscoverAssistantItem[];
+  items?: DiscoverProductItem[];
   mobile?: boolean;
 }
 
@@ -30,7 +30,7 @@ export const Featured = memo(({ items = [], mobile }: FeaturedProps) => {
     >
       <Grid maxItemWidth={280} rows={4}>
         {featured.map((item) => (
-          <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+          <Link href={urlJoin('/product/', item.identifier)} key={item.identifier}>
             <Card showCategory {...item} />
           </Link>
         ))}
