@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { memo } from 'react';
 
 import CustomLogo from '@/components/Branding/CustomLogo';
-import LangButton from '@/features/Setting/LangButton';
+import LangButton from '@/components/Setting/LangButton';
 
 import StoreSearchBar from '../../features/StoreSearchBar';
 

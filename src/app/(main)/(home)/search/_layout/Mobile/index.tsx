@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 
+import Footer from '@/components/Setting/Footer';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
-import Footer from '@/features/Setting/Footer';
 
 import { SCROLL_PARENT_ID } from '../../../features/const';
 import Header from './Header';

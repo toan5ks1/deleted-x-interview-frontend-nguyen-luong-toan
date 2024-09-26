@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Footer from '@/features/Setting/Footer';
+import Footer from '@/components/Setting/Footer';
 
 import Nav from '../../(products)/features/Nav';
 import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../../features/const';
