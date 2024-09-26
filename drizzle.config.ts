@@ -1,29 +1,12 @@
-import * as dotenv from 'dotenv';
-import type { Config } from 'drizzle-kit';
-
-// Read the .env file if it exists, or a file specified by the
-
-// dotenv_config_path parameter that's passed to Node.js
-
-dotenv.config();
-
-let connectionString = process.env.DATABASE_URL;
-
-if (process.env.NODE_ENV === 'test') {
-  console.log('current ENV:', process.env.NODE_ENV);
-  connectionString = process.env.DATABASE_TEST_URL;
-}
-
-if (!connectionString)
-  throw new Error('`DATABASE_URL` or `DATABASE_TEST_URL` not found in environment');
+import { type Config } from 'drizzle-kit';
 
 export default {
   dbCredentials: {
-    url: connectionString,
+    url: process.env.DATABASE_URL!,
   },
   dialect: 'postgresql',
-  out: './src/database/server/migrations',
-
-  schema: './src/database/server/schemas/lobechat',
+  out: './drizzle',
+  schema: './src/db/schema/index.ts',
   strict: true,
+  verbose: true,
 } satisfies Config;

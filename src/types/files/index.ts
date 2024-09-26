@@ -7,7 +7,6 @@ export enum FilesTabs {
   Websites = 'websites',
 }
 
-
 export interface FileItem {
   createdAt: Date;
   enabled?: boolean;
@@ -16,6 +15,12 @@ export interface FileItem {
   size: number;
   type: string;
   updatedAt: Date;
+  url: string;
+}
+
+export interface StoredFile {
+  id: string;
+  name: string;
   url: string;
 }
 
