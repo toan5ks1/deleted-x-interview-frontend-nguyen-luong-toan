@@ -2,26 +2,19 @@
 
 import { Grid, GridShowcase } from '@lobehub/ui';
 import Image from 'next/image';
-import Link from 'next/link';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import urlJoin from 'url-join';
 
-import { DiscoverProductItem } from '@/types/discover';
+import { ProductListWithFeatured } from '@/server/services/discover';
 
 import Card from './Card';
 
 interface FeaturedProps {
-  items?: DiscoverProductItem[];
+  items?: ProductListWithFeatured['featured'];
   mobile?: boolean;
 }
 
-export const Featured = memo(({ items = [], mobile }: FeaturedProps) => {
-  const featured = useMemo(() => {
-    const recentLength = mobile ? 2 : 3;
-    return items.slice(0, recentLength);
-  }, [items, mobile]);
-
+export const Featured = memo(({ items = [] }: FeaturedProps) => {
   return (
     <GridShowcase
       innerProps={{ gap: 24 }}
@@ -29,10 +22,8 @@ export const Featured = memo(({ items = [], mobile }: FeaturedProps) => {
       width={'100%'}
     >
       <Grid maxItemWidth={280} rows={4}>
-        {featured.map((item) => (
-          <Link href={urlJoin('/product/', item.identifier)} key={item.identifier}>
-            <Card showCategory {...item} />
-          </Link>
+        {items.map((item, index) => (
+          <Card key={item.product?.identifier ?? index} showCategory {...item} />
         ))}
       </Grid>
     </GridShowcase>

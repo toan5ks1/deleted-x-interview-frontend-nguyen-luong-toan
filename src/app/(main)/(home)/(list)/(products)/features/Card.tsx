@@ -6,13 +6,11 @@ import dynamic from 'next/dynamic';
 import qs from 'query-string';
 import { memo } from 'react';
 import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
-import urlJoin from 'url-join';
 
-import { DiscoverProductItem } from '@/types/discover';
+import { ProductList } from '@/server/services/discover';
 
 import CardBanner from '../../../components/CardBanner';
 import GitHubAvatar from '../../../components/GitHubAvatar';
-import { useCategoryItem } from './useCategory';
 
 const Link = dynamic(() => import('next/link'), {
   loading: () => <Skeleton.Button size={'small'} style={{ height: 22 }} />,
@@ -61,116 +59,107 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
 }));
 
-export interface AssistantCardProps
-  extends Omit<DiscoverProductItem, 'suggestions' | 'socialData' | 'config'>,
-    Omit<FlexboxProps, 'children'> {
+type ProductItem = ProductList['data'][number];
+export interface ProductCardProps extends ProductItem, Omit<FlexboxProps, 'children'> {
   showCategory?: boolean;
   variant?: 'default' | 'compact';
 }
 
-const AssistantCard = memo<AssistantCardProps>(
-  ({ showCategory, className, meta, createdAt, author, variant, ...rest }) => {
-    const { avatar, title, description, tags = [], category } = meta;
-    const { cx, styles, theme } = useStyles();
-    const categoryItem = useCategoryItem(category, 12);
-    const isCompact = variant === 'compact';
+const ProductCard = memo<ProductCardProps>(({ className, meta, product, variant, ...rest }) => {
+  const { avatar, title, description, tags = [] } = meta ?? {};
+  const { createdAt, author } = product ?? {};
+  const { cx, styles, theme } = useStyles();
+  const isCompact = variant === 'compact';
 
-    const user = (
-      <Flexbox
-        align={'center'}
-        gap={6}
-        horizontal
-        style={{ color: theme.colorTextSecondary, fontSize: 12 }}
-      >
-        <GitHubAvatar size={18} username={author} />
-        <span>{author}</span>
-      </Flexbox>
-    );
+  console.log(meta?.toString(), product?.toString());
 
-    return (
-      <Flexbox className={cx(styles.container, className)} gap={24} {...rest}>
-        {!isCompact && <CardBanner avatar={avatar} />}
-        <Flexbox gap={12} padding={16}>
+  const user = (
+    <Flexbox
+      align={'center'}
+      gap={6}
+      horizontal
+      style={{ color: theme.colorTextSecondary, fontSize: 12 }}
+    >
+      <GitHubAvatar size={18} username={author ?? ''} />
+      <span>{author}</span>
+    </Flexbox>
+  );
+
+  return (
+    <Flexbox className={cx(styles.container, className)} gap={24} {...rest}>
+      {!isCompact && <CardBanner avatar={avatar} />}
+      <Flexbox gap={12} padding={16}>
+        <Flexbox
+          align={isCompact ? 'flex-start' : 'flex-end'}
+          gap={16}
+          horizontal
+          justify={'space-between'}
+          style={{ position: 'relative' }}
+          width={'100%'}
+        >
           <Flexbox
-            align={isCompact ? 'flex-start' : 'flex-end'}
-            gap={16}
-            horizontal
-            justify={'space-between'}
-            style={{ position: 'relative' }}
-            width={'100%'}
+            gap={8}
+            style={{ overflow: 'hidden', paddingTop: isCompact ? 4 : 0, position: 'relative' }}
           >
-            <Flexbox
-              gap={8}
-              style={{ overflow: 'hidden', paddingTop: isCompact ? 4 : 0, position: 'relative' }}
+            <Title
+              className={styles.title}
+              ellipsis={{ rows: 1, tooltip: title }}
+              level={3}
+              style={{ fontSize: isCompact ? 16 : 18 }}
             >
-              <Title
-                className={styles.title}
-                ellipsis={{ rows: 1, tooltip: title }}
-                level={3}
-                style={{ fontSize: isCompact ? 16 : 18 }}
-              >
-                {title}
-              </Title>
-              {isCompact && user}
-            </Flexbox>
-            {isCompact ? (
-              <Avatar avatar={avatar} size={40} style={{ display: 'block' }} title={title} />
-            ) : (
-              <Center
-                flex={'none'}
-                height={64}
-                style={{
-                  background: theme.colorBgContainer,
-                  borderRadius: '50%',
-                  marginTop: -6,
-                  overflow: 'hidden',
-                  zIndex: 2,
-                }}
-                width={64}
-              >
-                <Avatar avatar={avatar} size={56} style={{ display: 'block' }} title={title} />
-              </Center>
-            )}
+              {title}
+            </Title>
+            {isCompact && user}
           </Flexbox>
-          {!isCompact && (
-            <Flexbox gap={8} horizontal style={{ fontSize: 12 }}>
-              {user}
-              <time className={styles.time} dateTime={new Date(createdAt).toISOString()}>
-                {createdAt}
-              </time>
-            </Flexbox>
+          {isCompact ? (
+            <Avatar avatar={avatar} size={40} style={{ display: 'block' }} title={title ?? ''} />
+          ) : (
+            <Center
+              flex={'none'}
+              height={64}
+              style={{
+                background: theme.colorBgContainer,
+                borderRadius: '50%',
+                marginTop: -6,
+                overflow: 'hidden',
+                zIndex: 2,
+              }}
+              width={64}
+            >
+              <Avatar avatar={avatar} size={56} style={{ display: 'block' }} title={title ?? ''} />
+            </Center>
           )}
-          <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-            {description}
-          </Paragraph>
-          <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
-            {showCategory && categoryItem ? (
-              <Link href={urlJoin('/products', categoryItem.key)}>
-                <Tag icon={categoryItem.icon} style={{ margin: 0 }}>
-                  {categoryItem.label}
-                </Tag>
-              </Link>
-            ) : (
-              tags
-                .slice(0, 4)
-                .filter(Boolean)
-                .map((tag: string, index) => {
-                  const url = qs.stringifyUrl({
-                    query: { q: tag, type: 'assistants' },
-                    url: '/search',
-                  });
-                  return (
-                    <Link href={url} key={index}>
-                      <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
-                    </Link>
-                  );
-                })
-            )}
+        </Flexbox>
+        {!isCompact && (
+          <Flexbox gap={8} horizontal style={{ fontSize: 12 }}>
+            {user}
+            <time className={styles.time} dateTime={new Date(createdAt).toISOString()}>
+              {new Date(createdAt).toISOString()}
+            </time>
           </Flexbox>
+        )}
+        <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
+          {description}
+        </Paragraph>
+        <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
+          {tags
+            .slice(0, 4)
+            .filter(Boolean)
+            .map((tag: string, index) => {
+              const url = qs.stringifyUrl({
+                query: { q: tag, type: 'assistants' },
+                url: '/search',
+              });
+              return (
+                <Link href={url} key={index}>
+                  <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
+                </Link>
+              );
+            })}
         </Flexbox>
       </Flexbox>
-    );
-  },
-);
+    </Flexbox>
+  );
+});
 
-export default AssistantCard;
+export default ProductCard;

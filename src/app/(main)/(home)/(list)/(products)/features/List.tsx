@@ -1,12 +1,10 @@
 'use client';
 
 import { Empty } from 'antd';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import urlJoin from 'url-join';
 
-import { DiscoverProductItem } from '@/types/discover';
+import { ProductListWithFeatured } from '@/server/services/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
 import Title from '../../../components/Title';
@@ -15,7 +13,7 @@ import Card from './Card';
 
 export interface ListProps {
   category?: string;
-  items?: DiscoverProductItem[];
+  items?: ProductListWithFeatured['paginated'];
   searchKeywords?: string;
 }
 
@@ -30,11 +28,7 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
         <VirtuosoGridList
           data={items}
           initialItemCount={24}
-          itemContent={(_, item) => (
-            <Link href={urlJoin('/product/', item.identifier)} key={item.identifier}>
-              <Card showCategory variant={'compact'} {...item} />
-            </Link>
-          )}
+          itemContent={(_, item) => <Card showCategory variant={'compact'} {...item} />}
           style={{
             minHeight: '75vh',
           }}
@@ -51,11 +45,7 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
         <VirtuosoGridList
           data={items}
           initialItemCount={12}
-          itemContent={(_, item) => (
-            <Link href={urlJoin('/product/', item.identifier)} key={item.identifier}>
-              <Card showCategory={!category} variant={'compact'} {...item} />
-            </Link>
-          )}
+          itemContent={(_, item) => <Card showCategory={!category} variant={'compact'} {...item} />}
           style={{
             minHeight: '75vh',
           }}

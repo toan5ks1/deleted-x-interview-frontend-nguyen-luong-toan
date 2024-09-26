@@ -147,9 +147,9 @@ export class Sitemap {
 
   async getAssistants(): Promise<MetadataRoute.Sitemap> {
     const list = await this.discoverService.getProductList({});
-    const sitmap = list.map((item) =>
-      this._genSitemap(urlJoin('/product', item.identifier), {
-        lastModified: item?.createdAt || LAST_MODIFIED,
+    const sitmap = list.data.map((item) =>
+      this._genSitemap(urlJoin('/product', item.product.identifier), {
+        lastModified: new Date(item?.product.createdAt.toString()).toISOString() || LAST_MODIFIED,
       }),
     );
     return flatten(sitmap);

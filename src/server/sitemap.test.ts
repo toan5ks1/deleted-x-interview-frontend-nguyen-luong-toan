@@ -61,10 +61,12 @@ describe('Sitemap', () => {
 
   describe('getAssistants', () => {
     it('should return a valid assistants sitemap', async () => {
-      vi.spyOn(sitemap['discoverService'], 'getProductList').mockResolvedValue([
-        // @ts-ignore
-        { identifier: 'test-assistant', createdAt: '2023-01-01' },
-      ]);
+      vi.spyOn(sitemap['discoverService'], 'getProductList').mockResolvedValue({
+        data: [
+          // @ts-ignore
+          { identifier: 'test-assistant', createdAt: '2023-01-01' },
+        ],
+      });
 
       const assistantsSitemap = await sitemap.getAssistants();
       expect(assistantsSitemap.length).toBe(14);

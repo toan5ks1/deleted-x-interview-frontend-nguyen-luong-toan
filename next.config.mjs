@@ -1,12 +1,8 @@
-import nextPWA from '@ducanh2912/next-pwa';
 import analyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
-
-// if you need to proxy the api endpoint to remote server
-const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
 
@@ -117,51 +113,7 @@ const nextConfig = {
       permanent: true,
       source: '/manifest.json',
     },
-    {
-      destination: '/discover/assistant/:slug',
-      has: [
-        {
-          key: 'agent',
-          type: 'query',
-          value: '(?<slug>.*)',
-        },
-      ],
-      permanent: true,
-      source: '/market',
-    },
-    {
-      destination: '/discover/assistants',
-      permanent: true,
-      source: '/discover/assistant',
-    },
-    {
-      destination: '/discover/models',
-      permanent: true,
-      source: '/discover/model',
-    },
-    {
-      destination: '/discover/plugins',
-      permanent: true,
-      source: '/discover/plugin',
-    },
-    {
-      destination: '/discover/providers',
-      permanent: true,
-      source: '/discover/provider',
-    },
-    {
-      destination: '/settings/common',
-      permanent: true,
-      source: '/settings',
-    },
   ],
-
-  rewrites: async () => [
-    // due to google api not work correct in some countries
-    // we need a proxy to bypass the restriction
-    { destination: `${API_PROXY_ENDPOINT}/api/chat/google`, source: '/api/chat/google' },
-  ],
-
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
@@ -190,16 +142,6 @@ const nextConfig = {
 const noWrapper = (config) => config;
 
 const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
-
-const withPWA = isProd
-  ? nextPWA({
-      dest: 'public',
-      register: true,
-      workboxOptions: {
-        skipWaiting: true,
-      },
-    })
-  : noWrapper;
 
 const hasSentry = !!process.env.NEXT_PUBLIC_SENTRY_DSN;
 const withSentry =
@@ -245,4 +187,4 @@ const withSentry =
         )
     : noWrapper;
 
-export default withBundleAnalyzer(withPWA(withSentry(nextConfig)));
+export default withBundleAnalyzer(withSentry(nextConfig));

@@ -1,21 +1,30 @@
-import { cloneDeep, merge } from 'lodash-es';
-import pMap from 'p-map';
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 
-import { DEFAULT_DISCOVER_ASSISTANT_ITEM } from '@/const/discover';
-import { DEFAULT_LANG } from '@/const/locale';
-import { Locales } from '@/locales/resources';
-import { AssistantStore } from '@/server/modules/AssistantStore';
-import { AssistantCategory, DiscoverAssistantItem } from '@/types/discover';
+/* eslint-disable typescript-sort-keys/interface */
+import { InferResponseType } from 'hono';
+
+import { client } from '@/libs/hono';
 
 const revalidate: number = 3600;
 
+interface GetProductProps {
+  page?: number;
+  limit?: number;
+}
+
+export type ProductList = InferResponseType<(typeof client.api.products)['$get'], 200>;
+export type ProductListWithFeatured = InferResponseType<
+  (typeof client.api.products)['with-featured']['$get'],
+  200
+>;
+
 export class DiscoverService {
-  assistantStore = new AssistantStore();
-  // Assistants
-  searchAssistant = async (locale: Locales, keywords: string): Promise<DiscoverAssistantItem[]> => {
-    const list = await this.getAssistantList(locale);
-    return list.filter((item) => {
-      return [item.author, item.meta.title, item.meta.description, item.meta?.tags]
+  baseUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/api/products`;
+  // Products
+  searchProduct = async (keywords: string): Promise<ProductList['data']> => {
+    const list = await this.getProductList({ page: 1, limit: 100 }); // Simply search at first 100 rows with no locale
+    return list.data.filter((item) => {
+      return [item.product?.author, item.meta?.title, item.meta?.description, item.meta?.tags]
         .flat()
         .filter(Boolean)
         .join(',')
@@ -24,81 +33,75 @@ export class DiscoverService {
     });
   };
 
-  getAssistantCategory = async (
-    locale: Locales,
-    category: AssistantCategory,
-  ): Promise<DiscoverAssistantItem[]> => {
-    const list = await this.getAssistantList(locale);
-    return list.filter((item) => item.meta.category === category);
+  createQueryParams = (params: Record<string, any>): string => {
+    const query = new URLSearchParams();
+
+    for (const key in params) {
+      if (params[key] !== undefined && params[key] !== null) {
+        // Handle arrays by joining them with commas
+        if (Array.isArray(params[key])) {
+          query.append(key, params[key].join(','));
+        } else {
+          query.append(key, params[key]);
+        }
+      }
+    }
+
+    return query.toString();
   };
 
-  getAssistantList = async (locale: Locales): Promise<DiscoverAssistantItem[]> => {
-    let res = await fetch(this.assistantStore.getAgentIndexUrl(locale), {
+  // getProductCategory = async (
+  //   locale: Locales,
+  //   category: ProductCategory,
+  // ): Promise<Product[]> => {
+  //   const list = await this.getProductList(locale);
+  //   return list.filter((item) => item.meta.category === category);
+  // };
+
+  getProductList = async ({ page = 1, limit = 12 }: GetProductProps): Promise<ProductList> => {
+    const url = `${this.baseUrl}?${this.createQueryParams({ page, limit })}` as string;
+
+    let res = await fetch(url, {
       next: { revalidate },
+      // cache: 'no-store',
     });
 
     if (!res.ok) {
-      res = await fetch(this.assistantStore.getAgentIndexUrl(DEFAULT_LANG), {
+      res = await fetch(url, {
+        next: { revalidate },
+        // cache: 'no-store',
+      });
+    }
+
+    if (!res.ok) return { data: [], nextPage: 0 };
+
+    const json = await res.json();
+
+    return json as ProductList;
+  };
+
+  getProductListWithFeatured = async ({
+    page = 1,
+    limit = 12,
+  }: GetProductProps): Promise<ProductListWithFeatured> => {
+    const url =
+      `${this.baseUrl}/with-featured?${this.createQueryParams({ page, limit })}` as string;
+
+    let res = await fetch(url, {
+      next: { revalidate },
+      // cache: 'no-store',
+    });
+
+    if (!res.ok) {
+      res = await fetch(url, {
         next: { revalidate },
       });
     }
 
-    if (!res.ok) return [];
+    if (!res.ok) return { featured: [], paginated: [], nextPage: 0 };
 
     const json = await res.json();
 
-    return json.agents;
-  };
-
-  getAssistantById = async (
-    locale: Locales,
-    identifier: string,
-  ): Promise<DiscoverAssistantItem | undefined> => {
-    let res = await fetch(this.assistantStore.getAgentUrl(identifier, locale), {
-      next: { revalidate: 12 * revalidate },
-    });
-
-    if (!res.ok) {
-      res = await fetch(this.assistantStore.getAgentUrl(DEFAULT_LANG), {
-        next: { revalidate: 12 * revalidate },
-      });
-    }
-
-    if (!res.ok) return;
-
-    let assistant = await res.json();
-
-    if (!assistant) return;
-
-    assistant = merge(cloneDeep(DEFAULT_DISCOVER_ASSISTANT_ITEM), assistant);
-
-    const categoryItems = await this.getAssistantCategory(
-      locale,
-      assistant.meta.category || AssistantCategory.General,
-    );
-
-    assistant = {
-      ...assistant,
-      suggestions: categoryItems
-        .filter((item) => item.identifier !== assistant.identifier)
-        .slice(0, 5) as any,
-    };
-
-    return assistant;
-  };
-
-  getAssistantByIds = async (
-    locale: Locales,
-    identifiers: string[],
-  ): Promise<DiscoverAssistantItem[]> => {
-    const list = await pMap(
-      identifiers,
-      async (identifier) => this.getAssistantById(locale, identifier),
-      {
-        concurrency: 5,
-      },
-    );
-
-    return list.filter(Boolean) as DiscoverAssistantItem[];
+    return json as ProductListWithFeatured;
   };
 }
