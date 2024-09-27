@@ -5,7 +5,7 @@
 - **Framework:** [Next.js](https://nextjs.org)
 - **ORM:** [Drizzle ORM](https://orm.drizzle.team)
 - **UI Components:** [Ant Design](https://ant.design/)
-- **Query tool:** [Hono.js](https://hono.dev/)
+- **Backend:** [Hono.js](https://hono.dev/)
 
 ## Features/Technique to be implemented
 

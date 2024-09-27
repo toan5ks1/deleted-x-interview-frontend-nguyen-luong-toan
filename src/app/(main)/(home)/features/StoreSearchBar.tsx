@@ -37,13 +37,15 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
   const router = useQueryRoute();
 
   useEffect(() => {
-    if (!pathname.includes('/search')) return;
     // 使用 useQueryState 时，当 handleSearch 为空时无法回跳
     if (!q) router.push(pathname, { query: {}, replace: true });
   }, [q, pathname]);
 
   const handleSearch = (value: string) => {
-    router.push(urlJoin(pathname === '/' ? 'all' : pathname, '/search'), { query: { q: value } });
+    const prefix = pathname === '/' ? 'all' : pathname;
+    const postfix = !pathname.includes('/search') ? 'search' : '';
+
+    router.push(urlJoin(prefix, postfix), { query: { q: value } });
   };
 
   return (
