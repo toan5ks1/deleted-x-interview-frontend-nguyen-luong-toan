@@ -32,6 +32,7 @@
     "build:analyze": "ANALYZE=true next build",
     "build:docker": "DOCKER=true next build",
     "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:push-test": "NODE_ENV=test drizzle-kit push",
     "db:studio": "drizzle-kit studio",
