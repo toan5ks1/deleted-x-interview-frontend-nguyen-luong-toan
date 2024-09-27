@@ -35,7 +35,11 @@
       "marketing": "Marketing",
       "office": "Office",
       "programming": "Programming",
-      "translation": "Translation"
+      "translation": "Translation",
+      "social-media": "Social Media",
+      "health-and-fitness": "Health and Fitness",
+      "finance-and-accounting": "Finance and Accounting",
+      "productivity": "Productivity"
     },
     "plugin": {
       "all": "All",

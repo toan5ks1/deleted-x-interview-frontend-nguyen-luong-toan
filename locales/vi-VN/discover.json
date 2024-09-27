@@ -35,7 +35,11 @@
       "marketing": "Tiếp thị",
       "office": "Văn phòng",
       "programming": "Lập trình",
-      "translation": "Dịch thuật"
+      "translation": "Dịch thuật",
+      "social-media": "Mạng xã hội",
+      "health-and-fitness": "Sức khoẻ",
+      "finance-and-accounting": "Tài chính kế toán",
+      "productivity": "Năng suất"
     },
     "plugin": {
       "all": "Tất cả",
