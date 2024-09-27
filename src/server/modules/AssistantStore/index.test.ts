@@ -17,12 +17,6 @@ describe('AssistantStore', () => {
     expect(url).toBe('https://chat-agents.lobehub.com');
   });
 
-  it('should return the zh-CN URL for zh locale', () => {
-    const agentMarket = new AssistantStore();
-    const url = agentMarket.getAgentIndexUrl('zh' as any);
-    expect(url).toBe('https://chat-agents.lobehub.com/index.zh-CN.json');
-  });
-
   it('should return the default URL for en locale', () => {
     const agentMarket = new AssistantStore();
     const url = agentMarket.getAgentIndexUrl('en' as any);

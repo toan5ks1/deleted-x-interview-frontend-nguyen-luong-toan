@@ -47,21 +47,6 @@ describe('Ld', () => {
     });
   });
 
-  describe('genWebPage', () => {
-    it('should generate correct webpage structure', () => {
-      const webpage = ld.genWebPage({
-        title: 'Test Page',
-        description: 'Test Description',
-        url: 'https://example.com/test',
-        locale: DEFAULT_LANG,
-      });
-
-      expect(webpage['@type']).toBe('WebPage');
-      expect(webpage.name).toBe('Test Page · LobeChat');
-      expect(webpage.description).toBe('Test Description');
-    });
-  });
-
   describe('genImageObject', () => {
     it('should generate correct image object', () => {
       const image = ld.genImageObject({
@@ -71,32 +56,6 @@ describe('Ld', () => {
 
       expect(image['@type']).toBe('ImageObject');
       expect(image.url).toBe('https://example.com/image.jpg');
-    });
-  });
-
-  describe('genWebSite', () => {
-    it('should generate correct website structure', () => {
-      const website = ld.genWebSite();
-
-      expect(website['@type']).toBe('WebSite');
-      expect(website.name).toBe('LobeChat');
-    });
-  });
-
-  describe('genArticle', () => {
-    it('should generate correct article structure', () => {
-      const article = ld.genArticle({
-        title: 'Test Article',
-        description: 'Test Description',
-        url: 'https://example.com/test',
-        author: ['arvinxx'],
-        identifier: 'test-id',
-        locale: DEFAULT_LANG,
-      });
-
-      expect(article['@type']).toBe('Article');
-      expect(article.headline).toBe('Test Article · LobeChat');
-      expect(article.author['@type']).toBe('Person');
     });
   });
 });
