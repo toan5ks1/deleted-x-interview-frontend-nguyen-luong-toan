@@ -10,7 +10,11 @@ const revalidate: number = 3600;
 export type CategoryList = InferResponseType<(typeof client.api.categories)['$get'], 200>;
 
 export class MasterService {
-  baseUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/api`;
+  baseUrl = `${
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_VERCEL_APP_URL!
+      : process.env.NEXT_PUBLIC_APP_URL!
+  }/api`;
 
   getCategories = async (): Promise<CategoryList> => {
     const url = `${this.baseUrl}/categories/}` as string;

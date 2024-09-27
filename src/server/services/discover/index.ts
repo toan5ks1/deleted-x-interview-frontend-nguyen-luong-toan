@@ -15,7 +15,11 @@ interface GetProductProps {
 export type ProductList = InferResponseType<(typeof client.api.products)['$get'], 200>;
 
 export class DiscoverService {
-  baseUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/api/products`;
+  baseUrl = `${
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_VERCEL_APP_URL!
+      : process.env.NEXT_PUBLIC_APP_URL!
+  }/api/products`;
   // Products
   searchProduct = async (keywords: string): Promise<ProductList['data']> => {
     const list = await this.getProductList({ page: 1, limit: 100 }); // Simply search at first 100 rows with no locale
