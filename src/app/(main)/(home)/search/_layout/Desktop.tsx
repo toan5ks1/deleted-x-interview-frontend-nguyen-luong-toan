@@ -3,9 +3,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import Footer from '@/components/Setting/Footer';
 
-import CategoryContainer from '../../components/CategoryContainer';
+import Nav from '../../(list)/(products)/features/Nav';
 import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../features/const';
-import Category from '../features/Category';
 
 const Layout = async ({ children }: PropsWithChildren) => {
   return (
@@ -17,11 +16,9 @@ const Layout = async ({ children }: PropsWithChildren) => {
       style={{ overflowX: 'hidden', overflowY: 'scroll', position: 'relative' }}
       width={'100%'}
     >
+      <Nav />
       <Flexbox gap={16} style={{ maxWidth: MAX_WIDTH, position: 'relative' }} width={'100%'}>
         <Flexbox gap={24} horizontal style={{ position: 'relative' }} width={'100%'}>
-          <CategoryContainer top={32}>
-            <Category />
-          </CategoryContainer>
           <Flexbox flex={1} gap={16}>
             {children}
           </Flexbox>

@@ -1,25 +1,21 @@
-import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
-import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
 import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
+import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/responsive';
 
-import { ListLoadingWithoutBanner } from '../components/ListLoading';
-
-const AssistantsResult = dynamic(() => import('./features/AssistantsResult'), {
-  loading: () => <ListLoadingWithoutBanner />,
-});
+import List from '../(list)/(products)/features/List';
+import Back from './features/Back';
 
 type Props = {
+  params: { slug: string };
   searchParams: {
     hl?: Locales;
     q?: string;
-    type?: string;
   };
 };
 
@@ -35,12 +31,16 @@ export const generateMetadata = async ({ searchParams }: Props) => {
   });
 };
 
-const Page = async ({ searchParams }: Props) => {
-  const { q, type } = searchParams;
-  if (!q) redirect(type ? urlJoin(`/`, type) : '/');
-  const keywords = decodeURIComponent(q);
+const Page = async ({ params, searchParams }: Props) => {
+  const { q } = searchParams;
 
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  if (!q) redirect('/');
+
+  const keywords = decodeURIComponent(q);
+  const discoverService = new DiscoverService();
+  const items = await discoverService.searchProduct(q, params.slug);
+
+  const { t } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
   const ld = ldModule.generate({
@@ -56,7 +56,8 @@ const Page = async ({ searchParams }: Props) => {
   return (
     <>
       <StructuredData ld={ld} />
-      {type === 'assistants' && <AssistantsResult locale={locale} mobile={mobile} q={keywords} />}
+      {!mobile && <Back href={'/'} style={{ marginBottom: 0 }} />}
+      <List items={items} searchKeywords={keywords} />
     </>
   );
 };

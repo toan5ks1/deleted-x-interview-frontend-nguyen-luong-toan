@@ -55,8 +55,6 @@ const Nav = memo(() => {
 
   const { data, isLoading } = useGetCategories();
 
-  console.log(pathname);
-
   const router = useQueryRoute();
 
   useScroll((scroll, delta) => {

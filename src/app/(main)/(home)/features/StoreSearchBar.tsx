@@ -4,15 +4,11 @@ import { SearchBar, SearchBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { usePathname } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import urlJoin from 'url-join';
 
-import { useQuery } from '@/hooks/useQuery';
+// import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { DiscoverTab } from '@/types/discover';
-
-import { useNav } from './useNav';
 
 export const useStyles = createStyles(({ css, prefixCls, token }) => ({
   active: css`
@@ -32,24 +28,24 @@ interface StoreSearchBarProps extends SearchBarProps {
 const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...rest }) => {
   const [active, setActive] = useState(false);
   const pathname = usePathname();
-  const { q } = useQuery();
-  const { activeKey } = useNav();
+  // const { q } = useQuery();
   const [searchKey, setSearchKey] = useQueryState('q');
 
   const { t } = useTranslation('discover');
   const { cx, styles } = useStyles();
   const router = useQueryRoute();
 
-  const activeType = activeKey === DiscoverTab.Home ? DiscoverTab.Products : activeKey;
+  // const activeType = activeKey === DiscoverTab.Home ? DiscoverTab.Products : activeKey;
+  console.log(pathname);
 
-  useEffect(() => {
-    if (!pathname.includes('/search')) return;
-    // 使用 useQueryState 时，当 handleSearch 为空时无法回跳
-    if (!q) router.push(urlJoin('/', activeType), { query: {}, replace: true });
-  }, [q, pathname, activeType]);
+  // useEffect(() => {
+  //   if (!pathname.includes('/search')) return;
+  //   // 使用 useQueryState 时，当 handleSearch 为空时无法回跳
+  //   if (!q) router.push(urlJoin('/', activeType), { query: {}, replace: true });
+  // }, [q, pathname, activeType]);
 
   const handleSearch = (value: string) => {
-    router.push('/search', { query: { q: value, type: activeType } });
+    router.push('/search', { query: { q: value } });
   };
 
   return (

@@ -35,7 +35,7 @@ const Page = async ({ params, searchParams }: Props) => {
   const ld = ldModule.generate({
     description: t('discover.assistants.description'),
     title: [td(`category.assistant.${params.slug}`), t('discover.assistants.title')].join(' · '),
-    url: urlJoin('/products', params.slug),
+    url: urlJoin('/', params.slug),
     webpage: {
       enable: true,
       search: '/search',
