@@ -16,7 +16,7 @@ export const products = pgTable('products', {
   homepage: varchar('homepage', { length: 255 }),
   identifier: varchar('identifier', { length: 255 }).notNull(),
   schemaVersion: integer('schema_version').notNull(),
-  isFeatured: boolean('isFeatured').notNull().default(false),
+  isFeatured: boolean('is_featured').notNull().default(false),
   categoryId: varchar('category_id', { length: 30 })
     .references(() => categories.id, { onDelete: 'cascade' })
     .notNull(), // foreign key to 'category'

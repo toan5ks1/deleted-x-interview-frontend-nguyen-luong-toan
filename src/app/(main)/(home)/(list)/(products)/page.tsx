@@ -31,11 +31,10 @@ const Page = async ({ searchParams }: Props) => {
   const mobile = isMobileDevice();
 
   const discoverService = new DiscoverService();
-  const items = await discoverService.getProductListWithFeatured({});
+  const featured = await discoverService.getFeaturedProducts({});
+  const products = await discoverService.getProductList({});
 
   // const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetProducts();
-
-  console.log('items');
 
   const ld = ldModule.generate({
     description: t('discover.assistants.description'),
@@ -50,7 +49,7 @@ const Page = async ({ searchParams }: Props) => {
   return (
     <Flexbox gap={24} width={'100%'}>
       <Flexbox gap={24} horizontal width={'100%'}>
-        <Featured items={items.featured} mobile={mobile} />
+        <Featured items={featured.data} mobile={mobile} />
         <Figure />
       </Flexbox>
       <Flexbox gap={24} horizontal style={{ position: 'relative' }} width={'100%'}>
@@ -59,7 +58,7 @@ const Page = async ({ searchParams }: Props) => {
         </CategoryContainer>
         <Flexbox flex={1} gap={16}>
           <StructuredData ld={ld} />
-          <List items={items.paginated} />
+          <List items={products.data} />
         </Flexbox>
       </Flexbox>
     </Flexbox>

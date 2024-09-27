@@ -42,6 +42,37 @@ const app = new Hono()
     },
   )
   .get(
+    '/featured',
+    zValidator(
+      'query',
+      z.object({
+        page: z.coerce.number(),
+        limit: z.coerce.number(),
+      }),
+    ),
+    async (c) => {
+      const { page, limit } = c.req.valid('query');
+      const data = await db
+        .select({
+          product: products,
+          meta: meta,
+          categories: categories,
+        })
+        .from(products)
+        .where(eq(products.isFeatured, true))
+        .leftJoin(meta, eq(products.metaId, meta.id)) // Join meta table
+        .leftJoin(categories, eq(products.categoryId, categories.id)) // Join categories table
+        .limit(limit)
+        .offset((page - 1) * limit)
+        .orderBy(desc(products.updatedAt));
+
+      return c.json({
+        data,
+        nextPage: data.length === limit ? page + 1 : null,
+      });
+    },
+  )
+  .get(
     '/with-featured',
     zValidator(
       'query',
@@ -63,7 +94,7 @@ const app = new Hono()
           .where(eq(products.isFeatured, true))
           .leftJoin(meta, eq(products.metaId, meta.id)) // Join meta table
           .leftJoin(categories, eq(products.categoryId, categories.id)) // Join categories table
-          .limit(4)
+          .limit(3)
           .orderBy(desc(products.updatedAt)),
 
         db

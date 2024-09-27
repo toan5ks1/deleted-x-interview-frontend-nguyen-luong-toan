@@ -19,7 +19,7 @@ type Props = {
   searchParams: {
     hl?: Locales;
     q?: string;
-    type?: 'assistants' | 'plugins' | 'models' | 'providers';
+    type?: string;
   };
 };
 
@@ -36,8 +36,8 @@ export const generateMetadata = async ({ searchParams }: Props) => {
 };
 
 const Page = async ({ searchParams }: Props) => {
-  const { q, type = 'assistants' } = searchParams;
-  if (!q) redirect(urlJoin(`/discover`, type));
+  const { q, type } = searchParams;
+  if (!q) redirect(type ? urlJoin(`/`, type) : '/');
   const keywords = decodeURIComponent(q);
 
   const { t, locale } = await translation('metadata', searchParams?.hl);

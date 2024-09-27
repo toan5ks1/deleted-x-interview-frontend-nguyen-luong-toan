@@ -21,7 +21,7 @@
 - [x] Apply Lazy Load
 - [x] Apply Skeleton Load
 - [x] Internalization with i18next
-- [x] Internalization with i18next
+- [x] Server side rendering
 - [x] Have Code Formatter
 - [x] Have Code Lint
 - [x] Optimize rendering large lists with **React Virtuoso**

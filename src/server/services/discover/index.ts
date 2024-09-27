@@ -13,10 +13,6 @@ interface GetProductProps {
 }
 
 export type ProductList = InferResponseType<(typeof client.api.products)['$get'], 200>;
-export type ProductListWithFeatured = InferResponseType<
-  (typeof client.api.products)['with-featured']['$get'],
-  200
->;
 
 export class DiscoverService {
   baseUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/api/products`;
@@ -80,28 +76,23 @@ export class DiscoverService {
     return json as ProductList;
   };
 
-  getProductListWithFeatured = async ({
-    page = 1,
-    limit = 12,
-  }: GetProductProps): Promise<ProductListWithFeatured> => {
-    const url =
-      `${this.baseUrl}/with-featured?${this.createQueryParams({ page, limit })}` as string;
+  getFeaturedProducts = async ({ page = 1, limit = 3 }: GetProductProps): Promise<ProductList> => {
+    const url = `${this.baseUrl}/featured?${this.createQueryParams({ page, limit })}` as string;
 
     let res = await fetch(url, {
-      next: { revalidate },
-      // cache: 'no-store',
+      next: { revalidate: 120 },
     });
 
     if (!res.ok) {
       res = await fetch(url, {
-        next: { revalidate },
+        next: { revalidate: 120 },
       });
     }
 
-    if (!res.ok) return { featured: [], paginated: [], nextPage: 0 };
+    if (!res.ok) return { data: [], nextPage: 0 };
 
     const json = await res.json();
 
-    return json as ProductListWithFeatured;
+    return json as ProductList;
   };
 }

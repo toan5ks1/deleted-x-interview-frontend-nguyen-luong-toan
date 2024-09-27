@@ -5,12 +5,12 @@ import Image from 'next/image';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { ProductListWithFeatured } from '@/server/services/discover';
+import { ProductList } from '@/server/services/discover';
 
 import Card from './Card';
 
 interface FeaturedProps {
-  items?: ProductListWithFeatured['featured'];
+  items?: ProductList['data'];
   mobile?: boolean;
 }
 

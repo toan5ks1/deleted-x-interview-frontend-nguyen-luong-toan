@@ -4,7 +4,7 @@ import { Empty } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ProductListWithFeatured } from '@/server/services/discover';
+import { ProductList } from '@/server/services/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
 import Title from '../../../components/Title';
@@ -13,7 +13,7 @@ import Card from './Card';
 
 export interface ListProps {
   category?: string;
-  items?: ProductListWithFeatured['paginated'];
+  items?: ProductList['data'];
   searchKeywords?: string;
 }
 
