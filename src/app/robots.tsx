@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next';
 
-import { sitemapModule } from '@/server/sitemap';
 import { getCanonicalUrl } from '@/server/utils/url';
 
 export default function robots(): MetadataRoute.Robots {
@@ -11,6 +10,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ['/api/*'],
       userAgent: '*',
     },
-    sitemap: sitemapModule.getRobots(),
   };
 }

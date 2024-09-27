@@ -102,18 +102,6 @@ const nextConfig = {
 
   output: buildWithDocker ? 'standalone' : undefined,
   reactStrictMode: true,
-  redirects: async () => [
-    {
-      destination: '/sitemap-index.xml',
-      permanent: true,
-      source: '/sitemap.xml',
-    },
-    {
-      destination: '/manifest.webmanifest',
-      permanent: true,
-      source: '/manifest.json',
-    },
-  ],
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
