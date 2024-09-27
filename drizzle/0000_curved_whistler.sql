@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS "meta" (
 	"avatar" varchar(10),
 	"description" varchar(500),
 	"title" varchar(255),
-	"category_id" varchar(30) NOT NULL,
 	"tags" json NOT NULL
 );
 --> statement-breakpoint
@@ -21,13 +20,15 @@ CREATE TABLE IF NOT EXISTS "products" (
 	"homepage" varchar(255),
 	"identifier" varchar(255) NOT NULL,
 	"schema_version" integer NOT NULL,
+	"is_featured" boolean DEFAULT false NOT NULL,
+	"category_id" varchar(30) NOT NULL,
 	"meta_id" varchar(30) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT current_timestamp
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "meta" ADD CONSTRAINT "meta_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "products" ADD CONSTRAINT "products_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

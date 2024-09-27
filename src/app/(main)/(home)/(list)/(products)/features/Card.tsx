@@ -71,8 +71,6 @@ const ProductCard = memo<ProductCardProps>(({ className, meta, product, variant,
   const { cx, styles, theme } = useStyles();
   const isCompact = variant === 'compact';
 
-  console.log(meta?.toString(), product?.toString());
-
   const user = (
     <Flexbox
       align={'center'}

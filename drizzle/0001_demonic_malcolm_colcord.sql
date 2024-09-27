@@ -1,1 +1,0 @@
-ALTER TABLE "products" ADD COLUMN "isFeatured" boolean DEFAULT false NOT NULL;

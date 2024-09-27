@@ -1,34 +1,13 @@
 {
+  "version": "7",
   "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
       "version": "7",
-      "when": 1727361308770,
-      "tag": "0000_early_microchip",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1727370510814,
-      "tag": "0001_demonic_malcolm_colcord",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1727374550175,
-      "tag": "0002_tense_bloodstorm",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1727409034917,
-      "tag": "0003_flashy_bushwacker",
+      "when": 1727454606188,
+      "tag": "0000_curved_whistler",
       "breakpoints": true
     }
-  ],
-  "version": "7"
+  ]
 }
