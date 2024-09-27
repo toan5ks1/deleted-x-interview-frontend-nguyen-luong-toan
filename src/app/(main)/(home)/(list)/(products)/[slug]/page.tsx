@@ -4,11 +4,11 @@ import StructuredData from '@/components/StructuredData';
 import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
-// import { DiscoverService } from '@/server/services/discover';
+import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { ProductCategory } from '@/types/discover';
 
-// import List from '../features/List';
+import List from '../features/List';
 
 type Props = { params: { slug: ProductCategory }; searchParams: { hl?: Locales } };
 
@@ -29,8 +29,8 @@ const Page = async ({ params, searchParams }: Props) => {
   const { t } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('discover', searchParams?.hl);
 
-  // const discoverService = new DiscoverService();
-  // const items = await discoverService.getProductCategory();
+  const discoverService = new DiscoverService();
+  const items = await discoverService.getProductCategory({ category: params.slug });
 
   const ld = ldModule.generate({
     description: t('discover.assistants.description'),
@@ -45,7 +45,7 @@ const Page = async ({ params, searchParams }: Props) => {
   return (
     <>
       <StructuredData ld={ld} />
-      {/* <List category={params.slug} items={items} /> */}
+      <List category={params.slug} items={items.data} />
     </>
   );
 };

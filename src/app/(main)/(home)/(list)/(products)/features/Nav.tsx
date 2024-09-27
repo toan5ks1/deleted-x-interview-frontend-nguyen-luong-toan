@@ -1,19 +1,19 @@
 'use client';
 
-import { ChatHeader } from '@lobehub/ui';
+import { ChatHeader, Icon } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
+import { Bot } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { useGetCategories } from '@/features/categories/use-get-categories';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { DiscoverTab } from '@/types/discover';
 
 import { MAX_WIDTH } from '../../../features/const';
-import { useNav } from '../../../features/useNav';
 import { useScroll } from '../../_layout/Desktop/useScroll';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -41,11 +41,22 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+const ALL_CATEGORIES = {
+  id: '000',
+  name: 'All',
+  slug: '/',
+};
+
 const Nav = memo(() => {
   const [hide, setHide] = useState(false);
   const pathname = usePathname();
   const { cx, styles } = useStyles();
-  const { items, activeKey } = useNav();
+  const iconSize = { fontSize: 16 };
+
+  const { data, isLoading } = useGetCategories();
+
+  console.log(pathname);
+
   const router = useQueryRoute();
 
   useScroll((scroll, delta) => {
@@ -58,19 +69,16 @@ const Nav = memo(() => {
     }
   });
 
-  const isHome = pathname === '/';
-  const isProviders = pathname === '/providers';
+  const navBar = [ALL_CATEGORIES, ...(data ?? [])]
+    .map((item) => {
+      const isActive = `/${item.slug}` === pathname;
 
-  const navBar = items
-    .map((item: any) => {
-      const isActive = item.key === activeKey;
-
-      const href = item.key === DiscoverTab.Home ? '/' : urlJoin('/', item.key);
+      const href = urlJoin('/', item.slug);
 
       return (
         <Link
           href={href}
-          key={item.key}
+          key={item.slug}
           onClick={(e) => {
             e.preventDefault();
             router.push(href);
@@ -78,10 +86,10 @@ const Nav = memo(() => {
         >
           <Button
             className={cx(styles.navItem, isActive && styles.activeNavItem)}
-            icon={item.icon}
+            icon={<Icon icon={Bot} size={iconSize} />}
             type={'text'}
           >
-            {item.label}
+            {item.name}
           </Button>
         </Link>
       );
@@ -90,7 +98,7 @@ const Nav = memo(() => {
 
   return (
     <ChatHeader
-      className={cx(styles.container, hide && styles.hide)}
+      className={cx(styles.container, isLoading && hide && styles.hide)}
       styles={{
         center: {
           flex: 'none',
@@ -105,13 +113,6 @@ const Nav = memo(() => {
       <Flexbox align={'center'} gap={4} horizontal>
         {navBar}
       </Flexbox>
-      {!isHome && !isProviders && (
-        <Flexbox align={'center'} gap={4} horizontal>
-          {/* ↓ cloud slot ↓ */}
-
-          {/* ↑ cloud slot ↑ */}
-        </Flexbox>
-      )}
     </ChatHeader>
   );
 });

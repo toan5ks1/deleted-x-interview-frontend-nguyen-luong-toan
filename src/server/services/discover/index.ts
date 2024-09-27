@@ -5,7 +5,7 @@ import { InferResponseType } from 'hono';
 
 import { client } from '@/libs/hono';
 
-const revalidate: number = 3600;
+const revalidate: number = 120;
 
 interface GetProductProps {
   page?: number;
@@ -46,13 +46,29 @@ export class DiscoverService {
     return query.toString();
   };
 
-  // getProductCategory = async (
-  //   locale: Locales,
-  //   category: ProductCategory,
-  // ): Promise<Product[]> => {
-  //   const list = await this.getProductList(locale);
-  //   return list.filter((item) => item.meta.category === category);
-  // };
+  getProductCategory = async ({
+    category,
+    page = 1,
+    limit = 12,
+  }: GetProductProps & { category: string }): Promise<ProductList> => {
+    const url = `${this.baseUrl}/${category}?${this.createQueryParams({ page, limit })}` as string;
+
+    let res = await fetch(url, {
+      next: { revalidate },
+    });
+
+    if (!res.ok) {
+      res = await fetch(url, {
+        next: { revalidate },
+      });
+    }
+
+    if (!res.ok) return { data: [], nextPage: 0 };
+
+    const json = await res.json();
+
+    return json as ProductList;
+  };
 
   getProductList = async ({ page = 1, limit = 12 }: GetProductProps): Promise<ProductList> => {
     const url = `${this.baseUrl}?${this.createQueryParams({ page, limit })}` as string;
@@ -80,12 +96,12 @@ export class DiscoverService {
     const url = `${this.baseUrl}/featured?${this.createQueryParams({ page, limit })}` as string;
 
     let res = await fetch(url, {
-      next: { revalidate: 120 },
+      next: { revalidate },
     });
 
     if (!res.ok) {
       res = await fetch(url, {
-        next: { revalidate: 120 },
+        next: { revalidate },
       });
     }
 
