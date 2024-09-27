@@ -1,4 +1,4 @@
-![Product disco](./public/screenshots/preview.png)
+![Product disco](./public/screenshots/product-disco.png)
 
 ## Tech Stack
 

@@ -8,7 +8,7 @@ import urlJoin from 'url-join';
 import { useQuery } from '@/hooks/useQuery';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
-import StoreSearchBar from '../../../features/StoreSearchBar';
+import StoreSearchBar from '../../../../../../features/StoreSearchBar';
 
 const Header = memo(() => {
   const router = useRouter();

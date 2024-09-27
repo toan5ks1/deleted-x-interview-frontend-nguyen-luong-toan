@@ -8,7 +8,7 @@ import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/responsive';
 
-import List from '../(list)/(products)/features/List';
+import List from '../../features/List';
 import Back from './features/Back';
 
 type Props = {
@@ -37,8 +37,10 @@ const Page = async ({ params, searchParams }: Props) => {
   if (!q) redirect('/');
 
   const keywords = decodeURIComponent(q);
+  const category = params.slug !== 'all' ? params.slug : undefined;
+
   const discoverService = new DiscoverService();
-  const items = await discoverService.searchProduct(q, params.slug);
+  const items = await discoverService.searchProduct(q, category);
 
   const { t } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();

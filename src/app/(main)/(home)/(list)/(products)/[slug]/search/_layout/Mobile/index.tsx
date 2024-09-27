@@ -1,22 +1,16 @@
 import { PropsWithChildren } from 'react';
 
+import { SCROLL_PARENT_ID } from '@/app/(main)/(home)/features/const';
 import Footer from '@/components/Setting/Footer';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 
-import { SCROLL_PARENT_ID } from '../../../features/const';
 import Header from './Header';
-import Nav from './Nav';
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
     <MobileContentLayout
       gap={16}
-      header={
-        <>
-          <Header />
-          <Nav />
-        </>
-      }
+      header={<Header />}
       id={SCROLL_PARENT_ID}
       style={{ paddingInline: 16 }}
     >

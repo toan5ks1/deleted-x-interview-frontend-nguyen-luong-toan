@@ -8,8 +8,6 @@ import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/responsive';
 
-import CategoryContainer from '../../components/CategoryContainer';
-import Category from './features/Category';
 import { Featured, Figure } from './features/Featured';
 import List from './features/List';
 
@@ -34,8 +32,6 @@ const Page = async ({ searchParams }: Props) => {
   const featured = await discoverService.getFeaturedProducts({});
   const products = await discoverService.getProductList({});
 
-  // const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetProducts();
-
   const ld = ldModule.generate({
     description: t('discover.assistants.description'),
     title: t('discover.assistants.title'),
@@ -53,9 +49,6 @@ const Page = async ({ searchParams }: Props) => {
         <Figure />
       </Flexbox>
       <Flexbox gap={24} horizontal style={{ position: 'relative' }} width={'100%'}>
-        <CategoryContainer>
-          <Category />
-        </CategoryContainer>
         <Flexbox flex={1} gap={16}>
           <StructuredData ld={ld} />
           <List items={products.data} />

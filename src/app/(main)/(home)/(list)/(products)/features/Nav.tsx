@@ -1,7 +1,7 @@
 'use client';
 
 import { ChatHeader, Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { Bot } from 'lucide-react';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { useGetCategories } from '@/features/categories/use-get-categories';
+import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 import { MAX_WIDTH } from '../../../features/const';
@@ -44,7 +45,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 const ALL_CATEGORIES = {
   id: '000',
   name: 'All',
-  slug: '/',
+  slug: '/all',
 };
 
 const Nav = memo(() => {
@@ -52,6 +53,7 @@ const Nav = memo(() => {
   const pathname = usePathname();
   const { cx, styles } = useStyles();
   const iconSize = { fontSize: 16 };
+  const { q } = useQuery();
 
   const { data, isLoading } = useGetCategories();
 
@@ -69,9 +71,9 @@ const Nav = memo(() => {
 
   const navBar = [ALL_CATEGORIES, ...(data ?? [])]
     .map((item) => {
-      const isActive = `/${item.slug}` === pathname;
+      const isActive = pathname.includes(item.slug);
 
-      const href = urlJoin('/', item.slug);
+      const href = urlJoin('/', item.slug, q ? '/search' : '/');
 
       return (
         <Link
@@ -109,7 +111,17 @@ const Nav = memo(() => {
       }}
     >
       <Flexbox align={'center'} gap={4} horizontal>
-        {navBar}
+        {isLoading ? (
+          <>
+            <Skeleton.Button size={'default'} style={{ height: 24 }} />
+            <Skeleton.Button size={'default'} style={{ height: 24 }} />
+            <Skeleton.Button size={'default'} style={{ height: 24 }} />
+            <Skeleton.Button size={'default'} style={{ height: 24 }} />
+            <Skeleton.Button size={'default'} style={{ height: 24 }} />
+          </>
+        ) : (
+          navBar
+        )}
       </Flexbox>
     </ChatHeader>
   );

@@ -28,9 +28,10 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
 const Page = async ({ params, searchParams }: Props) => {
   const { t } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('discover', searchParams?.hl);
+  const category = params.slug !== 'all' ? params.slug : '';
 
   const discoverService = new DiscoverService();
-  const items = await discoverService.getProductCategory({ category: params.slug });
+  const items = await discoverService.getProductCategory({ category });
 
   const ld = ldModule.generate({
     description: t('discover.assistants.description'),
