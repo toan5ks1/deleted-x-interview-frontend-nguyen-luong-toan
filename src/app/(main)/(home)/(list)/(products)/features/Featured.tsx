@@ -18,7 +18,7 @@ export const Featured = memo(({ items = [] }: FeaturedProps) => {
   return (
     <GridShowcase
       innerProps={{ gap: 24 }}
-      style={{ maxHeight: 'calc(100% - 104px)', maxWidth: 1024 }}
+      style={{ maxHeight: 'calc(100% - 104px)', maxWidth: 1024, minHeight: 162 }}
       width={'100%'}
     >
       <Grid maxItemWidth={280} rows={4}>

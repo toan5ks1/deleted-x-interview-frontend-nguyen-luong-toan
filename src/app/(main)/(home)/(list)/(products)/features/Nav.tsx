@@ -11,7 +11,6 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { useGetCategories } from '@/features/categories/use-get-categories';
-import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 import { MAX_WIDTH } from '../../../features/const';
@@ -53,7 +52,6 @@ const Nav = memo(() => {
   const pathname = usePathname();
   const { cx, styles } = useStyles();
   const iconSize = { fontSize: 16 };
-  const { q } = useQuery();
 
   const { data, isLoading } = useGetCategories();
 
@@ -73,7 +71,7 @@ const Nav = memo(() => {
     .map((item) => {
       const isActive = pathname.includes(item.slug);
 
-      const href = urlJoin('/', item.slug, q ? '/search' : '/');
+      const href = urlJoin('/', item.slug);
 
       return (
         <Link
@@ -98,7 +96,7 @@ const Nav = memo(() => {
 
   return (
     <ChatHeader
-      className={cx(styles.container, isLoading && hide && styles.hide)}
+      className={cx(styles.container, hide && styles.hide)}
       styles={{
         center: {
           flex: 'none',

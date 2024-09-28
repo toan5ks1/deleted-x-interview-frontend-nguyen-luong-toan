@@ -66,7 +66,10 @@ export interface ProductCardProps extends ProductItem, Omit<FlexboxProps, 'child
 }
 
 const ProductCard = memo<ProductCardProps>(({ className, meta, product, variant, ...rest }) => {
-  const { avatar, title, description, tags = [] } = meta ?? {};
+  const { avatar, title, description, tags } = meta ?? {};
+
+  console.log('f', typeof tags, tags);
+
   const { createdAt, author } = product ?? {};
   const { cx, styles, theme } = useStyles();
   const isCompact = variant === 'compact';
@@ -140,20 +143,17 @@ const ProductCard = memo<ProductCardProps>(({ className, meta, product, variant,
           {description}
         </Paragraph>
         <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
-          {tags
-            .slice(0, 4)
-            .filter(Boolean)
-            .map((tag: string, index) => {
-              const url = qs.stringifyUrl({
-                query: { q: tag, type: 'assistants' },
-                url: '/search',
-              });
-              return (
-                <Link href={url} key={index}>
-                  <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
-                </Link>
-              );
-            })}
+          {(tags?.split(',') ?? []).slice(0, 4).map((tag: string, index) => {
+            const url = qs.stringifyUrl({
+              query: { q: tag },
+              url: '/search',
+            });
+            return (
+              <Link href={url} key={index}>
+                <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
+              </Link>
+            );
+          })}
         </Flexbox>
       </Flexbox>
     </Flexbox>

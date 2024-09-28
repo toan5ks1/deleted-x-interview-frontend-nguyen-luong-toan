@@ -1,5 +1,4 @@
 {
-  "version": "7",
   "dialect": "postgresql",
   "entries": [
     {
@@ -8,6 +7,21 @@
       "when": 1727454606188,
       "tag": "0000_curved_whistler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1727470978231,
+      "tag": "0001_curved_meteorite",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1727504245372,
+      "tag": "0002_melted_vector",
+      "breakpoints": true
     }
-  ]
+  ],
+  "version": "7"
 }

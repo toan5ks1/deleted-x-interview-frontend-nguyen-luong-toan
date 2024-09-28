@@ -1,0 +1,1 @@
+ALTER TABLE "meta" ALTER COLUMN "tags" SET DATA TYPE jsonb;

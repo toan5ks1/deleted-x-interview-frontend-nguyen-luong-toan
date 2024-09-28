@@ -14,7 +14,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         align={'center'}
         flex={1}
         id={SCROLL_PARENT_ID}
-        padding={16}
+        padding={24}
         style={{ overflowX: 'hidden', overflowY: 'scroll', position: 'relative' }}
         width={'100%'}
       >
