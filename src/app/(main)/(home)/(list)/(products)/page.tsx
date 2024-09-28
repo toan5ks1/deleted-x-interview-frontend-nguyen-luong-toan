@@ -29,8 +29,11 @@ const Page = async ({ searchParams }: Props) => {
   const mobile = isMobileDevice();
 
   const discoverService = new DiscoverService();
-  const featured = await discoverService.getFeaturedProducts({});
-  const products = await discoverService.getProductList({});
+
+  const [featured, products] = await Promise.all([
+    discoverService.getProducts({ featured: true, limit: 3 }),
+    discoverService.getProducts({}),
+  ]);
 
   const ld = ldModule.generate({
     description: t('discover.assistants.description'),
@@ -38,7 +41,7 @@ const Page = async ({ searchParams }: Props) => {
     url: '/',
     webpage: {
       enable: true,
-      search: '/search',
+      search: '/',
     },
   });
 

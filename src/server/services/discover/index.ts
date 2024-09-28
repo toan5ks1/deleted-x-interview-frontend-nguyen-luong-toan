@@ -5,11 +5,15 @@ import { InferResponseType } from 'hono';
 
 import { client } from '@/libs/hono';
 
-const revalidate: number = 120;
+const PAGE_SIZE = 12;
+const REVALIDATE = 120;
 
 interface GetProductProps {
+  category?: string;
+  keyword?: string;
   page?: number;
   limit?: number;
+  featured?: boolean;
 }
 
 export type ProductList = InferResponseType<(typeof client.api.products)['$get'], 200>;
@@ -20,20 +24,6 @@ export class DiscoverService {
       ? process.env.NEXT_PUBLIC_VERCEL_APP_URL!
       : process.env.NEXT_PUBLIC_APP_URL!
   }/api/products`;
-  // Products
-  searchProduct = async (keywords: string, category?: string): Promise<ProductList['data']> => {
-    const list = category
-      ? await this.getProductCategory({ category })
-      : await this.getProductList({ page: 1, limit: 100 }); // Simply search at first 100 rows with no locale
-    return list.data.filter((item) => {
-      return [item.product?.author, item.meta?.title, item.meta?.description, item.meta?.tags]
-        .flat()
-        .filter(Boolean)
-        .join(',')
-        .toLowerCase()
-        .includes(decodeURIComponent(keywords).toLowerCase());
-    });
-  };
 
   createQueryParams = (params: Record<string, any>): string => {
     const query = new URLSearchParams();
@@ -52,62 +42,21 @@ export class DiscoverService {
     return query.toString();
   };
 
-  getProductCategory = async ({
-    category,
+  /** Products query **/
+  getProducts = async ({
     page = 1,
-    limit = 12,
-  }: GetProductProps & { category: string }): Promise<ProductList> => {
-    const url = `${this.baseUrl}/${category}?${this.createQueryParams({ page, limit })}` as string;
+    limit = PAGE_SIZE,
+    ...rest
+  }: GetProductProps): Promise<ProductList> => {
+    const url = `${this.baseUrl}?${this.createQueryParams({ page, limit, ...rest })}` as string;
 
     let res = await fetch(url, {
-      next: { revalidate },
+      next: { revalidate: REVALIDATE },
     });
 
     if (!res.ok) {
       res = await fetch(url, {
-        next: { revalidate },
-      });
-    }
-
-    if (!res.ok) return { data: [], nextPage: 0 };
-
-    const json = await res.json();
-
-    return json as ProductList;
-  };
-
-  getProductList = async ({ page = 1, limit = 12 }: GetProductProps): Promise<ProductList> => {
-    const url = `${this.baseUrl}?${this.createQueryParams({ page, limit })}` as string;
-
-    let res = await fetch(url, {
-      next: { revalidate },
-      // cache: 'no-store',
-    });
-
-    if (!res.ok) {
-      res = await fetch(url, {
-        next: { revalidate },
-        // cache: 'no-store',
-      });
-    }
-
-    if (!res.ok) return { data: [], nextPage: 0 };
-
-    const json = await res.json();
-
-    return json as ProductList;
-  };
-
-  getFeaturedProducts = async ({ page = 1, limit = 3 }: GetProductProps): Promise<ProductList> => {
-    const url = `${this.baseUrl}/featured?${this.createQueryParams({ page, limit })}` as string;
-
-    let res = await fetch(url, {
-      next: { revalidate },
-    });
-
-    if (!res.ok) {
-      res = await fetch(url, {
-        next: { revalidate },
+        next: { revalidate: REVALIDATE },
       });
     }
 

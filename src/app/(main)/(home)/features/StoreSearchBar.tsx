@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import urlJoin from 'url-join';
 
 import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
@@ -43,9 +42,8 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
 
   const handleSearch = (value: string) => {
     const prefix = pathname === '/' ? 'all' : pathname;
-    const postfix = !pathname.includes('/search') ? 'search' : '';
 
-    router.push(urlJoin(prefix, postfix), { query: { q: value } });
+    router.push(prefix, { query: { q: value } });
   };
 
   return (
