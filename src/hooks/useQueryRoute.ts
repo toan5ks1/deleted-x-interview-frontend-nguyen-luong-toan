@@ -18,7 +18,13 @@ interface GenHrefOptions extends QueryRouteOptions {
   url: string;
 }
 
-const genHref = ({ hash, replace, url, prevQuery = {}, query = {} }: GenHrefOptions): string => {
+export const genHref = ({
+  hash,
+  replace,
+  url,
+  prevQuery = {},
+  query = {},
+}: GenHrefOptions): string => {
   let href = qs.stringifyUrl({ query: replace ? query : { ...prevQuery, ...query }, url });
 
   if (!isOnServerSide && hash) {
@@ -37,8 +43,12 @@ export const useQueryRoute = () => {
       push: (url: string, options: QueryRouteOptions = {}) => {
         return router.push(genHref({ prevQuery, url, ...options }));
       },
-      replace: (url: string, options: QueryRouteOptions = {}) => {
-        return router.replace(genHref({ prevQuery, url, ...options }));
+      replace: (
+        url: string,
+        options: QueryRouteOptions = {},
+        others: { scroll?: boolean } = {},
+      ) => {
+        return router.replace(genHref({ prevQuery, url, ...options }), others);
       },
     }),
     [prevQuery],

@@ -4,14 +4,15 @@ import { ChatHeader, Icon } from '@lobehub/ui';
 import { Button, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { Bot } from 'lucide-react';
-import Link from 'next/link';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useScroll } from '../../(products)/features/useScroll';
+import { useQueryRoute } from '@/hooks/useQueryRoute';
+
 import { MAX_WIDTH } from '../../../features/const';
 import { useNav } from '../../../features/useNav';
+import { useScroll } from '../../features/useScroll';
 
 export const useStyles = createStyles(({ css, token }) => ({
   activeNavItem: css`
@@ -42,6 +43,8 @@ const Nav = memo(() => {
   const [hide, setHide] = useState(false);
   const { cx, styles } = useStyles();
   const { activeItem, navItems, isLoading } = useNav();
+
+  const router = useQueryRoute();
 
   useScroll((scroll, delta) => {
     if (delta < 0) {
@@ -79,15 +82,18 @@ const Nav = memo(() => {
           </>
         ) : (
           navItems.map((item) => (
-            <Link href={urlJoin('/', item.key)} key={item.key}>
-              <Button
-                className={cx(styles.navItem, activeItem.slug === item.key && styles.activeNavItem)}
-                icon={<Icon icon={Bot} size={{ fontSize: 16 }} />}
-                type={'text'}
-              >
-                {item.label}
-              </Button>
-            </Link>
+            <Button
+              className={cx(styles.navItem, activeItem.slug === item.key && styles.activeNavItem)}
+              icon={<Icon icon={Bot} size={{ fontSize: 16 }} />}
+              key={item.key}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(urlJoin('/', item.key));
+              }}
+              type={'text'}
+            >
+              {item.label}
+            </Button>
           ))
         )}
       </Flexbox>

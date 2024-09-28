@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import { ProductList } from '@/server/services/discover';
 
-import SearchResultCount from '../../../components/SearchResultCount';
-import Title from '../../../components/Title';
-import VirtuosoGridList from '../../../components/VirtuosoGridList';
+import SearchResultCount from '../../components/SearchResultCount';
+import Title from '../../components/Title';
+import VirtuosoGridList from '../../components/VirtuosoGridList';
 import Card from './Card';
 
 export interface ListProps {
