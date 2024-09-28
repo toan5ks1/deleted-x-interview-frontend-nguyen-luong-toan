@@ -54,7 +54,7 @@ const Page = async ({ params, searchParams }: Props) => {
   return (
     <>
       <StructuredData ld={ld} />
-      {!mobile && <Back href={'/'} style={{ marginBottom: 0 }} />}
+      {!mobile && <Back href={'/'} style={{ marginBottom: 0, maxWidth: 'fit-content' }} />}
       <List items={items.data} searchKeywords={keyword} />
     </>
   );

@@ -4,6 +4,7 @@
 import { InferResponseType } from 'hono';
 
 import { client } from '@/libs/hono';
+import { createQueryParams, domain } from '@/server/utils/url';
 
 const PAGE_SIZE = 12;
 const REVALIDATE = 120;
@@ -19,28 +20,7 @@ interface GetProductProps {
 export type ProductList = InferResponseType<(typeof client.api.products)['$get'], 200>;
 
 export class DiscoverService {
-  baseUrl = `${
-    process.env.NODE_ENV === 'production'
-      ? process.env.NEXT_PUBLIC_VERCEL_APP_URL!
-      : process.env.NEXT_PUBLIC_APP_URL!
-  }/api/products`;
-
-  createQueryParams = (params: Record<string, any>): string => {
-    const query = new URLSearchParams();
-
-    for (const key in params) {
-      if (params[key] !== undefined && params[key] !== null) {
-        // Handle arrays by joining them with commas
-        if (Array.isArray(params[key])) {
-          query.append(key, params[key].join(','));
-        } else {
-          query.append(key, params[key]);
-        }
-      }
-    }
-
-    return query.toString();
-  };
+  baseUrl = `${domain}/api/products`;
 
   /** Products query **/
   getProducts = async ({
@@ -48,7 +28,7 @@ export class DiscoverService {
     limit = PAGE_SIZE,
     ...rest
   }: GetProductProps): Promise<ProductList> => {
-    const url = `${this.baseUrl}?${this.createQueryParams({ page, limit, ...rest })}` as string;
+    const url = `${this.baseUrl}?${createQueryParams({ page, limit, ...rest })}` as string;
 
     let res = await fetch(url, {
       next: { revalidate: REVALIDATE },

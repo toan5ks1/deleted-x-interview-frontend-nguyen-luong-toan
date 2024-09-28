@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ProductCategory } from '@/types/discover';
 
-import { ICON_SIZE } from '../../../components/CategoryMenu';
+import { ICON_SIZE } from '../../components/CategoryMenu';
 
 export const useCategory = (fontsize?: number) => {
   const theme = useTheme();

@@ -8,9 +8,8 @@ import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import Menu from '@/components/Menu';
+import Menu, { MenuProps } from '@/components/Menu';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { DiscoverTab } from '@/types/discover';
 
 import { useNav } from '../../../features/useNav';
 
@@ -30,25 +29,27 @@ export const useStyles = createStyles(({ css, token }) => ({
     font-size: 18px;
     font-weight: 700;
     line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   `,
 }));
 
 const Nav = memo(() => {
   const [open, setOpen] = useState(false);
   const { styles, theme } = useStyles();
-  const { items, activeKey, activeItem } = useNav();
+  const { navItems, activeItem } = useNav();
   const router = useQueryRoute();
 
   return (
     <>
-      <Flexbox align={'center'} className={styles.title} gap={4} horizontal>
+      <Flexbox align={'center'} className={styles.title} gap={4} horizontal width={'100%'}>
         <ActionIcon
           color={theme.colorText}
           icon={MenuIcon}
           onClick={() => setOpen(true)}
           size={{ blockSize: 32, fontSize: 18 }}
         />
-        {activeItem?.label}
+        {activeItem?.name}
       </Flexbox>
 
       <Drawer
@@ -74,16 +75,16 @@ const Nav = memo(() => {
         zIndex={10}
       >
         <Menu
-          items={items}
+          items={navItems as MenuProps['items']}
           onClick={({ key }) => {
-            if (key === DiscoverTab.Home) {
+            if (key === 'all') {
               router.push('/');
             } else {
               router.push(urlJoin('/', key));
             }
           }}
           selectable
-          selectedKeys={[activeKey]}
+          selectedKeys={[activeItem.slug]}
           variant={'compact'}
         />
       </Drawer>

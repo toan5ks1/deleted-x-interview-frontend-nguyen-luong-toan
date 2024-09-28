@@ -7,7 +7,7 @@ import { memo } from 'react';
 import CustomLogo from '@/components/Branding/CustomLogo';
 import LangButton from '@/components/Setting/LangButton';
 
-import StoreSearchBar from '../../features/StoreSearchBar';
+import StoreSearchBar from '../../../features/StoreSearchBar';
 
 const Header = memo(() => {
   return (

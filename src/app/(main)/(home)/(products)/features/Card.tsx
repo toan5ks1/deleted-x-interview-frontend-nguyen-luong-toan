@@ -9,8 +9,8 @@ import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { ProductList } from '@/server/services/discover';
 
-import CardBanner from '../../../components/CardBanner';
-import GitHubAvatar from '../../../components/GitHubAvatar';
+import CardBanner from '../../components/CardBanner';
+import GitHubAvatar from '../../components/GitHubAvatar';
 
 const Link = dynamic(() => import('next/link'), {
   loading: () => <Skeleton.Button size={'small'} style={{ height: 22 }} />,

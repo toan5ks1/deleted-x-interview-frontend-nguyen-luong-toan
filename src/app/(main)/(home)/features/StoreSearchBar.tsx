@@ -7,7 +7,7 @@ import { useQueryState } from 'nuqs';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useQuery } from '@/hooks/useQuery';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 export const useStyles = createStyles(({ css, prefixCls, token }) => ({
@@ -27,24 +27,31 @@ interface StoreSearchBarProps extends SearchBarProps {
 
 const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...rest }) => {
   const [active, setActive] = useState(false);
-  const pathname = usePathname();
-  const { q } = useQuery();
   const [searchKey, setSearchKey] = useQueryState('q');
+  const debouncedSearchKey = useDebounce(searchKey);
+  const pathname = usePathname();
 
   const { t } = useTranslation('discover');
   const { cx, styles } = useStyles();
   const router = useQueryRoute();
 
-  useEffect(() => {
-    // 使用 useQueryState 时，当 handleSearch 为空时无法回跳
-    if (!q) router.push(pathname, { query: {}, replace: true });
-  }, [q, pathname]);
-
-  const handleSearch = (value: string) => {
-    const prefix = pathname === '/' ? 'all' : pathname;
-
-    router.push(prefix, { query: { q: value } });
+  const handleSearch = () => {
+    if (debouncedSearchKey) {
+      router.replace(
+        pathname === '/' ? 'all' : pathname,
+        {
+          query: { q: debouncedSearchKey },
+        },
+        { scroll: false },
+      );
+    } else {
+      router.push(pathname, { query: {}, replace: true });
+    }
   };
+
+  useEffect(() => {
+    handleSearch();
+  }, [debouncedSearchKey]);
 
   return (
     <SearchBar
