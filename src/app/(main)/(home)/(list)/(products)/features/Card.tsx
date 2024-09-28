@@ -68,8 +68,6 @@ export interface ProductCardProps extends ProductItem, Omit<FlexboxProps, 'child
 const ProductCard = memo<ProductCardProps>(({ className, meta, product, variant, ...rest }) => {
   const { avatar, title, description, tags } = meta ?? {};
 
-  console.log('f', typeof tags, tags);
-
   const { createdAt, author } = product ?? {};
   const { cx, styles, theme } = useStyles();
   const isCompact = variant === 'compact';

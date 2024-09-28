@@ -24,10 +24,11 @@
 - [x] Server side rendering
 - [x] Have Code Formatter
 - [x] Have Code Lint
+- [x] Have Unit Test
 - [x] Optimize rendering large lists with **React Virtuoso**
-- [ ] Authentication/Authorization with **Stripe Checkout**
-- [ ] Checkout with **Stripe Checkout**
-- [ ] Admin dashboard with stores, products, orders, subscriptions, and payments
+- [ ] Debounce search bar
+- [ ] Seed tags, filter by multiple tags
+- [ ] Pagination
 
 ## Running Locally
 

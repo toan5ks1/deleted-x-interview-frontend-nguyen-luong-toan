@@ -46,6 +46,7 @@ const app = new Hono().get(
       .leftJoin(meta, eq(products.metaId, meta.id)) // Join meta table
       .leftJoin(categories, eq(products.categoryId, categories.id)) // Join categories table
       .where(and(withCategory, withFeatured, withKeyword)) // Apply conditions if any
+      .groupBy(products.id, meta.id, categories.id) // Group by these columns
       .limit(limit)
       .offset((page - 1) * limit)
       .orderBy(desc(products.updatedAt));
