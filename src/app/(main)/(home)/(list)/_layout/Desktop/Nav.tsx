@@ -5,16 +5,13 @@ import { Button, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { Bot } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useGetCategories } from '@/features/categories/use-get-categories';
-import { useQueryRoute } from '@/hooks/useQueryRoute';
-
+import { useScroll } from '../../(products)/features/useScroll';
 import { MAX_WIDTH } from '../../../features/const';
-import { useScroll } from '../../_layout/Desktop/useScroll';
+import { useNav } from '../../../features/useNav';
 
 export const useStyles = createStyles(({ css, token }) => ({
   activeNavItem: css`
@@ -41,21 +38,10 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const ALL_CATEGORIES = {
-  id: '000',
-  name: 'All',
-  slug: '/all',
-};
-
 const Nav = memo(() => {
   const [hide, setHide] = useState(false);
-  const pathname = usePathname();
   const { cx, styles } = useStyles();
-  const iconSize = { fontSize: 16 };
-
-  const { data, isLoading } = useGetCategories();
-
-  const router = useQueryRoute();
+  const { activeItem, navItems, isLoading } = useNav();
 
   useScroll((scroll, delta) => {
     if (delta < 0) {
@@ -66,33 +52,6 @@ const Nav = memo(() => {
       setHide(true);
     }
   });
-
-  const navBar = [ALL_CATEGORIES, ...(data ?? [])]
-    .map((item) => {
-      const isActive = pathname.includes(item.slug);
-
-      const href = urlJoin('/', item.slug);
-
-      return (
-        <Link
-          href={href}
-          key={item.slug}
-          onClick={(e) => {
-            e.preventDefault();
-            router.push(href);
-          }}
-        >
-          <Button
-            className={cx(styles.navItem, isActive && styles.activeNavItem)}
-            icon={<Icon icon={Bot} size={iconSize} />}
-            type={'text'}
-          >
-            {item.name}
-          </Button>
-        </Link>
-      );
-    })
-    .filter(Boolean);
 
   return (
     <ChatHeader
@@ -111,14 +70,25 @@ const Nav = memo(() => {
       <Flexbox align={'center'} gap={4} horizontal>
         {isLoading ? (
           <>
-            <Skeleton.Button size={'default'} style={{ height: 24 }} />
-            <Skeleton.Button size={'default'} style={{ height: 24 }} />
-            <Skeleton.Button size={'default'} style={{ height: 24 }} />
-            <Skeleton.Button size={'default'} style={{ height: 24 }} />
-            <Skeleton.Button size={'default'} style={{ height: 24 }} />
+            <Skeleton.Button key={'001'} size={'large'} style={{ height: 24 }} />
+            <Skeleton.Button key={'002'} size={'large'} style={{ height: 24 }} />
+            <Skeleton.Button key={'003'} size={'large'} style={{ height: 24 }} />
+            <Skeleton.Button key={'004'} size={'large'} style={{ height: 24 }} />
+            <Skeleton.Button key={'005'} size={'large'} style={{ height: 24 }} />
+            <Skeleton.Button key={'006'} size={'large'} style={{ height: 24 }} />
           </>
         ) : (
-          navBar
+          navItems.map((item) => (
+            <Link href={urlJoin('/', item.key)} key={item.key}>
+              <Button
+                className={cx(styles.navItem, activeItem.slug === item.key && styles.activeNavItem)}
+                icon={<Icon icon={Bot} size={{ fontSize: 16 }} />}
+                type={'text'}
+              >
+                {item.label}
+              </Button>
+            </Link>
+          ))
         )}
       </Flexbox>
     </ChatHeader>

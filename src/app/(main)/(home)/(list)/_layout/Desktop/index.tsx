@@ -3,12 +3,14 @@ import { Flexbox } from 'react-layout-kit';
 
 import Footer from '@/components/Setting/Footer';
 
-import Nav from '../../(products)/features/Nav';
 import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../../features/const';
+import Header from './Header';
+import Nav from './Nav';
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
-    <>
+    <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }} width={'100%'}>
+      <Header />
       <Nav />
       <Flexbox
         align={'center'}
@@ -28,7 +30,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           <Footer />
         </Flexbox>
       </Flexbox>
-    </>
+    </Flexbox>
   );
 };
 

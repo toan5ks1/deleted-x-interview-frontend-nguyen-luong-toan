@@ -4,7 +4,7 @@ import { InferResponseType } from 'hono';
 
 import { client } from '@/libs/hono';
 
-export type ResponseType = InferResponseType<(typeof client.api.categories)['$get'], 200>;
+export type CategoriesType = InferResponseType<(typeof client.api.categories)['$get'], 200>;
 
 export const useGetCategories = () => {
   const query = useQuery({

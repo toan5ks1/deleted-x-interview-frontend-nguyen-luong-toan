@@ -1,71 +1,84 @@
 import { Icon } from '@lobehub/ui';
-import { Bot, Brain, BrainCircuit, House, Puzzle } from 'lucide-react';
+import { Button, Skeleton } from 'antd';
+import { createStyles } from 'antd-style';
+import { Bot } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ReactNode, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useCallback, useMemo } from 'react';
 import urlJoin from 'url-join';
 
-import type { MenuProps } from '@/components/Menu';
-import { useQuery } from '@/hooks/useQuery';
-import { DiscoverTab } from '@/types/discover';
+import { CategoriesType, useGetCategories } from '@/features/categories/use-get-categories';
 
-export const useNav = () => {
+export const ALL_CATEGORIES = {
+  id: '000',
+  name: 'All',
+  slug: '/all',
+};
+
+export const NO_CATEGORY = {
+  id: '',
+  name: '',
+  slug: '',
+};
+
+export const useStyles = createStyles(({ css, token }) => ({
+  activeNavItem: css`
+    background: ${token.colorFillTertiary};
+  `,
+  navItem: css`
+    font-weight: 500;
+  `,
+}));
+
+export const useNav = (isMobile?: boolean) => {
   const pathname = usePathname();
-  const { type } = useQuery();
-  const { t } = useTranslation('discover');
-  const iconSize = { fontSize: 16 };
+  const { cx, styles } = useStyles();
 
-  const activeKey = useMemo(() => {
-    for (const value of Object.values(DiscoverTab)) {
-      if (pathname === '/search') {
-        return (type as DiscoverTab) || DiscoverTab.Products;
-      } else if (pathname.includes(urlJoin('/', value))) {
-        return value;
-      }
-    }
-    return DiscoverTab.Home;
+  const { data, isLoading } = useGetCategories();
+  const items = [ALL_CATEGORIES, ...(data ?? [])];
+
+  const renderNavItems = useCallback((items: CategoriesType['data']) => {
+    return isMobile
+      ? items.map((item) => {
+          return {
+            icon: <Icon icon={Bot} size={{ fontSize: 16 }} />,
+            key: item.slug,
+            label: item.name,
+          };
+        })
+      : items.map((item) => {
+          return (
+            <Link href={urlJoin('/', item.slug)} key={item.slug}>
+              <Button
+                className={cx(styles.navItem, pathname.includes(item.slug) && styles.activeNavItem)}
+                icon={<Icon icon={Bot} size={{ fontSize: 16 }} />}
+                type={'text'}
+              >
+                {item.name}
+              </Button>
+            </Link>
+          );
+        });
+  }, []);
+
+  const navItems = useMemo(() => {
+    return isLoading
+      ? [
+          <Skeleton.Button key={'001'} size={'large'} style={{ height: 24 }} />,
+          <Skeleton.Button key={'002'} size={'large'} style={{ height: 24 }} />,
+          <Skeleton.Button key={'003'} size={'large'} style={{ height: 24 }} />,
+          <Skeleton.Button key={'004'} size={'large'} style={{ height: 24 }} />,
+          <Skeleton.Button key={'005'} size={'large'} style={{ height: 24 }} />,
+        ]
+      : renderNavItems(items);
+  }, [isLoading]);
+
+  const activeItem = useMemo(() => {
+    return items.find((item) => pathname.includes(item.slug)) ?? NO_CATEGORY;
   }, [pathname]);
-
-  const items: MenuProps['items'] = useMemo(
-    () => [
-      {
-        icon: <Icon icon={House} size={iconSize} />,
-        key: DiscoverTab.Home,
-        label: t('tab.home'),
-      },
-      {
-        icon: <Icon icon={Bot} size={iconSize} />,
-        key: DiscoverTab.Products,
-        label: t('tab.assistants'),
-      },
-      {
-        icon: <Icon icon={Puzzle} size={iconSize} />,
-        key: DiscoverTab.Plugins,
-        label: t('tab.plugins'),
-      },
-      {
-        icon: <Icon icon={Brain} size={iconSize} />,
-        key: DiscoverTab.Models,
-        label: t('tab.models'),
-      },
-      {
-        icon: <Icon icon={BrainCircuit} size={iconSize} />,
-        key: DiscoverTab.Providers,
-        label: t('tab.providers'),
-      },
-    ],
-    [t],
-  );
-
-  const activeItem = items.find((item: any) => item.key === activeKey) as {
-    icon: ReactNode;
-    key: string;
-    label: string;
-  };
 
   return {
     activeItem,
-    activeKey,
-    items,
+    navItems,
   };
 };
