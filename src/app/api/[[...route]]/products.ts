@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { zValidator } from '@hono/zod-validator';
-import { and, desc, eq, ilike, or } from 'drizzle-orm';
+import { and, count, desc, eq, ilike, or } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { z } from 'zod';
 
@@ -36,25 +36,43 @@ const app = new Hono().get(
         )
       : undefined;
 
-    const data = await db
-      .select({
-        product: products,
-        meta: meta,
-        categories: categories,
-      })
-      .from(products)
-      .leftJoin(meta, eq(products.metaId, meta.id)) // Join meta table
-      .leftJoin(categories, eq(products.categoryId, categories.id)) // Join categories table
-      .where(and(withCategory, withFeatured, withKeyword)) // Apply conditions if any
-      .groupBy(products.id, meta.id, categories.id) // Group by these columns
-      .limit(limit)
-      .offset((page - 1) * limit)
-      .orderBy(desc(products.updatedAt));
+    const where = and(withCategory, withFeatured, withKeyword);
 
-    return c.json({
-      data,
-      nextPage: data.length === limit ? page + 1 : null,
+    const { data, total } = await db.transaction(async (tx) => {
+      const data = await tx
+        .select({
+          product: products,
+          meta: meta,
+          categories: categories,
+        })
+        .from(products)
+        .leftJoin(meta, eq(products.metaId, meta.id)) // Join meta table
+        .leftJoin(categories, eq(products.categoryId, categories.id)) // Join categories table
+        .where(where) // Apply conditions if any
+        .groupBy(products.id, meta.id, categories.id) // Group by these columns
+        .limit(limit)
+        .offset((page - 1) * limit)
+        .orderBy(desc(products.updatedAt));
+
+      const total = await tx
+        .select({
+          count: count(),
+        })
+        .from(products)
+        .leftJoin(meta, eq(products.metaId, meta.id)) // Join meta table
+        .leftJoin(categories, eq(products.categoryId, categories.id)) // Join categories table
+        .where(where)
+        .execute()
+        .then((res) => res[0]?.count ?? 0);
+
+      return {
+        data,
+        total,
+      };
     });
+
+    const pageCount = Math.ceil(total / limit);
+    return c.json({ data, pageCount, total });
   },
 );
 
