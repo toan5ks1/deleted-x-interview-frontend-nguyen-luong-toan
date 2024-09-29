@@ -26,9 +26,10 @@
 - [x] Have Code Lint
 - [x] Have Unit Test
 - [x] Optimize rendering large lists with **React Virtuoso**
-- [ ] Debounce search bar
+- [x] Debounce search bar
+- [x] Pagination
 - [ ] Seed tags, filter by multiple tags
-- [ ] Pagination
+- [ ] Infiniti scroll on mobile
 
 ## Running Locally
 
