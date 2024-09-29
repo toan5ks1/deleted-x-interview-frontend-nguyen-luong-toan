@@ -4,6 +4,7 @@ import { ChatHeader, Icon } from '@lobehub/ui';
 import { Button, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { Bot } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
@@ -45,6 +46,12 @@ const Nav = memo(() => {
   const { activeItem, navItems, isLoading } = useNav();
 
   const router = useQueryRoute();
+  const searchParams = useSearchParams();
+  const keyword = searchParams.get('q');
+  const queryParams = {
+    query: keyword ? { q: keyword } : undefined,
+    replace: true,
+  };
 
   useScroll((scroll, delta) => {
     if (delta < 0) {
@@ -88,7 +95,7 @@ const Nav = memo(() => {
               key={item.key}
               onClick={(e) => {
                 e.preventDefault();
-                router.push(urlJoin('/', item.key));
+                router.replace(urlJoin('/', item.key), queryParams);
               }}
               type={'text'}
             >
