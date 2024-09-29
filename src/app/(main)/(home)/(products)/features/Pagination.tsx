@@ -12,7 +12,7 @@ export interface PaginationProps {
   total?: number;
 }
 
-const ListPagination = memo<PaginationProps>(({ limit, page, total }) => {
+const ListPagination = memo<PaginationProps>(({ limit = 12, page, total }) => {
   const pathname = usePathname();
   const router = useQueryRoute();
 

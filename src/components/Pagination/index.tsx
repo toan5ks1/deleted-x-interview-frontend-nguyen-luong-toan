@@ -13,7 +13,6 @@ const Pagination = memo<PaginationProps>(({ className, ...rest }) => {
     <PaginationPrimitive
       align="center"
       className={cx(styles, className)}
-      defaultCurrent={1}
       showSizeChanger
       total={0}
       {...rest}
