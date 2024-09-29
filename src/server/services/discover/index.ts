@@ -40,7 +40,7 @@ export class DiscoverService {
       });
     }
 
-    if (!res.ok) return { data: [], nextPage: 0 };
+    if (!res.ok) return { data: [], total: 0, pageCount: 0 };
 
     const json = await res.json();
 

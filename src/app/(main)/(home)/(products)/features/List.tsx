@@ -15,16 +15,17 @@ export interface ListProps {
   category?: string;
   items?: ProductList['data'];
   searchKeywords?: string;
+  total: number;
 }
 
-const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
+const List = memo<ListProps>(({ category, searchKeywords, items = [], total = 0 }) => {
   const { t } = useTranslation('discover');
 
   if (searchKeywords) {
     if (!items || items?.length === 0) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     return (
       <>
-        <SearchResultCount count={items.length} keyword={searchKeywords} />
+        <SearchResultCount count={total} keyword={searchKeywords} />
         <VirtuosoGridList
           data={items}
           initialItemCount={24}
@@ -41,7 +42,7 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
     items &&
     items?.length > 0 && (
       <>
-        <Title tag={items.length}>{t('assistants.list')}</Title>
+        <Title tag={total}>{t('assistants.list')}</Title>
         <VirtuosoGridList
           data={items}
           initialItemCount={12}

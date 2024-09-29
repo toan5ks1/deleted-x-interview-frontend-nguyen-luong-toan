@@ -1,5 +1,4 @@
 import StructuredData from '@/components/StructuredData';
-import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
@@ -7,14 +6,13 @@ import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/responsive';
 
 import List from '../features/List';
+import Pagination from '../features/Pagination';
+import { SearchParamsProductProps } from '../page';
 import Back from './features/Back';
 
 type Props = {
   params: { slug: string };
-  searchParams: {
-    hl?: Locales;
-    q?: string;
-  };
+  searchParams: SearchParamsProductProps;
 };
 
 export const generateMetadata = async ({ searchParams }: Props) => {
@@ -31,12 +29,12 @@ export const generateMetadata = async ({ searchParams }: Props) => {
 
 const Page = async ({ params, searchParams }: Props) => {
   const category = params.slug !== 'all' ? params.slug : undefined;
-  const { q } = searchParams;
+  const { limit, page, q } = searchParams;
 
   const keyword = q ? decodeURIComponent(q) : undefined;
 
   const discoverService = new DiscoverService();
-  const items = await discoverService.getProducts({ category, keyword });
+  const items = await discoverService.getProducts({ category, keyword, limit, page });
 
   const { t } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
@@ -55,7 +53,8 @@ const Page = async ({ params, searchParams }: Props) => {
     <>
       <StructuredData ld={ld} />
       {!mobile && <Back href={'/'} style={{ marginBottom: 0, maxWidth: 'fit-content' }} />}
-      <List items={items.data} searchKeywords={keyword} />
+      <List items={items.data} searchKeywords={keyword} total={items.total} />
+      <Pagination limit={limit} page={page} total={items.total} />
     </>
   );
 };
